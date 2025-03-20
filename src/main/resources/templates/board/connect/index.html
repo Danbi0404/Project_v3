@@ -34,7 +34,7 @@
             </div>
             <div class="auth-buttons">
                 <!-- 로그인 상태에 따라 변경 -->
-                <a th:if="${loginUserBean.login == true}" th:href="@{/user/modify}" class="login-btn" th:text="${loginUserBean.user_nickname} + ' 님'">홍길동 님</a>
+                <a th:if="${loginUserBean.login == true}" th:href="@{/user/mypage}" class="login-btn" th:text="${loginUserBean.user_nickname} + ' 님'">홍길동 님</a>
                 <a th:unless="${loginUserBean.login == true}" th:href="@{/user/login}" class="login-btn">로그인</a>
                 <a href="/main" class="page-btn">학습 페이지로</a>
             </div>
