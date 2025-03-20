@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORDLY - 게시글 수정</title>
+  <!-- CSRF 토큰 (Spring Security) -->
+  <meta name="_csrf" th:content="${_csrf != null} ? ${_csrf.token} : ''"/>
+  <meta name="_csrf_header" th:content="${_csrf != null} ? ${_csrf.headerName} : ''"/>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://webfontworld.github.io/kopus/KoPubWorldDotum.css" rel="stylesheet">
+  <!-- Icons -->
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <!-- CSS 파일 -->
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/board/board-common.css}">
+  <link rel="stylesheet" th:href="@{/css/board/wordly-talking.css}">
+  <style>
+    /* 글 작성 폼 스타일 */
+    .write-form {
+      margin-bottom: 40px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 5px;
+      font-family: 'KoPubWorldDotum', sans-serif;
+      font-size: 14px;
+    }
+
+    .form-select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 5px;
+      font-family: 'KoPubWorldDotum', sans-serif;
+      font-size: 14px;
+      background-color: #fff;
+    }
+
+    .form-textarea {
+      width: 100%;
+      min-height: 300px;
+      padding: 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 5px;
+      font-family: 'KoPubWorldDotum', sans-serif;
+      font-size: 14px;
+      resize: vertical;
+    }
+
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .cancel-btn {
+      padding: 10px 20px;
+      background-color: #f5f5f5;
+      color: #666;
+      border: none;
+      border-radius: 5px;
+      font-family: 'KoPubWorldDotum', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .cancel-btn:hover {
+      background-color: #e0e0e0;
+    }
+
+    .submit-btn {
+      padding: 10px 20px;
+      background-color: #D1DE74;
+      color: #333;
+      border: none;
+      border-radius: 5px;
+      font-family: 'KoPubWorldDotum', sans-serif;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .submit-btn:hover {
+      background-color: #c1ce64;
+    }
+
+    /* 모바일 최적화 */
+    @media (max-width: 768px) {
+      .form-buttons {
+        flex-direction: column-reverse;
+        gap: 10px;
+      }
+
+      .cancel-btn, .submit-btn {
+        width: 100%;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+<!-- Main Content -->
+<div class="main-content">
+  <!-- 헤더 -->
+  <header class="board-header">
+    <div class="logo">WORDLY</div>
+    <div class="user-actions">
+      <div class="search-box">
+        <input type="text" placeholder="키워드, # 태그 검색">
+        <button class="search-btn"><i class="fi fi-rr-search"></i></button>
+      </div>
+      <div class="auth-buttons">
+        <!-- 로그인 상태에 따라 변경 -->
+        <a th:if="${loginUserBean.login == true}" th:href="@{/user/modify}" class="login-btn" th:text="${loginUserBean.user_nickname} + ' 님'">홍길동 님</a>
+        <a th:unless="${loginUserBean.login == true}" th:href="@{/user/login}" class="login-btn">로그인</a>
+        <a href="/main" class="page-btn">학습 페이지로</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="board-divider"></div>
+
+  <!-- 메인 콘텐츠 영역 -->
+  <div class="board-container">
+    <!-- 좌측 메뉴 -->
+    <div class="board-sidebar">
+      <h2 class="section-title">COMMUNITY</h2>
+
+      <div class="board-menu">
+        <div class="menu-category">
+          <a th:href="@{/board/wordly-talking}" class="menu-item active">워들리 토킹</a>
+          <a th:href="@{/board/connect}" class="menu-item">커넥트</a>
+        </div>
+
+        <div class="menu-subcategory">
+          <a th:href="@{/board/wordly-talking/free}" class="submenu-item" th:classappend="${boardBean.board_info_type.contains('free')} ? 'active' : ''">자유 게시판</a>
+          <a th:href="@{/board/wordly-talking/knowhow}" class="submenu-item" th:classappend="${boardBean.board_info_type.contains('knowhow')} ? 'active' : ''">노하우 전수</a>
+          <a th:href="@{/board/wordly-talking/tutor}" class="submenu-item" th:classappend="${boardBean.board_info_type.contains('tutor')} ? 'active' : ''">튜터 모집</a>
+          <a th:href="@{/board/wordly-talking/student}" class="submenu-item" th:classappend="${boardBean.board_info_type.contains('student')} ? 'active' : ''">학생 모집</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 게시글 수정 영역 -->
+    <div class="board-content">
+      <h2>게시글 수정</h2>
+
+      <form class="write-form" th:action="@{/board/wordly-talking/modify_pro}" method="post" th:object="${boardBean}">
+        <input type="hidden" name="board_key" th:field="*{board_key}">
+        <input type="hidden" name="board_info_key" th:field="*{board_info_key}">
+
+        <div class="form-group">
+          <label for="board_title" class="form-label">제목</label>
+          <input type="text" id="board_title" name="board_title" class="form-control" placeholder="제목을 입력하세요" th:field="*{board_title}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="board_text" class="form-label">내용</label>
+          <textarea id="board_text" name="board_text" class="form-textarea" placeholder="내용을 입력하세요" th:field="*{board_text}" required></textarea>
+        </div>
+
+        <div class="form-buttons">
+          <a th:href="@{|/board/wordly-talking/detail/${boardBean.board_key}|}" class="cancel-btn">취소</a>
+          <button type="submit" class="submit-btn">수정완료</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/board/wordly-talking.js}"></script>
+</body>
+</html>

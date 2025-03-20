@@ -1,0 +1,237 @@
+/*
+ * find-account.css - 아이디/비밀번호 찾기 페이지 스타일
+ * 관련 파일: find-account.html, find-account.js
+ */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #E0C5B4;
+    font-family: 'Roboto', sans-serif;
+    padding: 20px;
+}
+
+.find-account-container {
+    background-color: #F5EBE2;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    margin-left: 80px; /* 사이드바 너비만큼 마진 */
+}
+
+.logo {
+    font-family: 'Lilita One', sans-serif;
+    font-size: 42px;
+    color: #E0912F;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* 탭 스타일 */
+.tab-container {
+    margin-bottom: 20px;
+}
+
+.tab-header {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 20px;
+}
+
+.tab-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.3s ease;
+}
+
+.tab-item:hover {
+    background-color: #f0f0f0;
+}
+
+.tab-item.active {
+    color: #E0912F;
+    border-bottom-color: #E0912F;
+}
+
+.tab-description {
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* 폼 스타일 */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #614D42;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.form-control:focus {
+    border-color: #D1DE74;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(209, 222, 116, 0.2);
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    background-color: #614D42;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Phudu', cursive;
+    text-transform: uppercase;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #614D42;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #503d34;
+}
+
+.btn-secondary {
+    background-color: #D1DE74;
+    color: #333;
+}
+
+.btn-secondary:hover {
+    background-color: #bcc863;
+}
+
+.btn-outline {
+    background-color: transparent;
+    color: #614D42;
+    border: 1px solid #614D42;
+}
+
+.btn-outline:hover {
+    background-color: #f0f0f0;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #614D42;
+    text-decoration: none;
+    font-family: 'Phudu', cursive;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* 결과 컨테이너 스타일 */
+.result-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.result-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 18px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.result-content {
+    margin-bottom: 20px;
+}
+
+.result-content p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+.result-content .small {
+    font-size: 12px;
+    color: #888;
+}
+
+.result-date {
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+}
+
+#found-id {
+    font-weight: bold;
+    color: #E0912F;
+}
+
+#email-sent {
+    font-weight: bold;
+}
+
+.result-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* 메시지 스타일 */
+.message {
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.success-message {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .find-account-container {
+        margin-left: 60px; /* 모바일에서 사이드바 너비 조정 */
+        padding: 20px;
+    }
+
+    .result-actions {
+        flex-direction: column;
+    }
+}

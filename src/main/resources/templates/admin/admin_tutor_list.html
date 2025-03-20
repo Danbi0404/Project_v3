@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - 튜터 신청 관리</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/admin_page.css}">
+</head>
+<body>
+<!-- 관리자 사이드바 -->
+<div class="admin-sidebar">
+    <div class="admin-logo" onclick="location.href='/admin/admin_page'">WORDLY</div>
+
+    <div class="admin-menu">
+        <div class="admin-menu-title">관리 메뉴</div>
+
+        <a href="/admin/admin_page" class="menu-item">
+            <i class="fi fi-rr-apps"></i>
+            대시보드
+        </a>
+
+        <a href="/admin/admin_tutor_list" class="menu-item active">
+            <i class="fi fi-rr-users-alt"></i>
+            튜터 관리
+        </a>
+    </div>
+
+    <div class="admin-footer">
+        <a href="/user/logout" class="logout-btn">
+            <i class="fi fi-rr-sign-out-alt"></i>
+            로그아웃
+        </a>
+    </div>
+</div>
+
+<!-- 관리자 메인 콘텐츠 -->
+<div class="admin-main">
+    <div class="admin-header">
+        <h1 class="admin-title">튜터 신청 관리</h1>
+    </div>
+
+    <!-- 알림 메시지 -->
+    <div th:if="${param.approveSuccess}" class="alert alert-success">
+        튜터 승인이 완료되었습니다.
+    </div>
+    <div th:if="${param.rejectSuccess}" class="alert alert-success">
+        튜터 거부가 완료되었습니다.
+    </div>
+
+    <!-- 필터 섹션 -->
+    <div class="filter-section">
+        <div class="filter-label">상태 필터:</div>
+        <div class="filter-options">
+            <a th:href="@{/admin/admin_tutor_list}" th:class="${currentStatus == 'all'} ? 'active' : ''">전체</a>
+            <a th:href="@{/admin/admin_tutor_list(status='pending')}" th:class="${currentStatus == 'pending'} ? 'active' : ''">대기 중</a>
+            <a th:href="@{/admin/admin_tutor_list(status='reapply')}" th:class="${currentStatus == 'reapply'} ? 'active' : ''">재신청</a>
+            <a th:href="@{/admin/admin_tutor_list(status='language_pending')}" th:class="${currentStatus == 'language_pending'} ? 'active' : ''">언어 추가</a>
+            <a th:href="@{/admin/admin_tutor_list(status='approved')}" th:class="${currentStatus == 'approved'} ? 'active' : ''">승인됨</a>
+            <a th:href="@{/admin/admin_tutor_list(status='rejected')}" th:class="${currentStatus == 'rejected'} ? 'active' : ''">거부됨</a>
+        </div>
+    </div>
+
+    <!-- 신청 목록 테이블 -->
+    <div class="admin-container">
+        <div class="table-container">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>이름</th>
+                    <th>닉네임</th>
+                    <th>모국어</th>
+                    <th>가르칠 언어</th>
+                    <th>신청일</th>
+                    <th>승인일</th>
+                    <th>상태</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(tutorList)}">
+                    <td colspan="8" class="no-data">신청 내역이 없습니다.</td>
+                </tr>
+                <tr th:each="tutor, status : ${tutorList}">
+                    <td th:text="${status.count}">1</td>
+                    <td th:text="${tutor.user_name}">홍길동
+                        <!-- 재신청 마크 추가 -->
+                        <span th:if="${tutor.status == 'pending' && tutor.reject_reason != null}"
+                              class="status-badge reapply">재신청</span>
+                    </td>
+                    <td th:text="${tutor.user_nickname}">길동이</td>
+                    <td th:text="${tutor.born_language}">한국어</td>
+                    <td th:text="${tutor.teach_language}">영어</td>
+                    <td th:text="${#dates.format(tutor.apply_date, 'yyyy-MM-dd')}">2023-04-01</td> <!-- 신청일 -->
+                    <td th:text="${tutor.approve_date != null ? #dates.format(tutor.approve_date, 'yyyy-MM-dd') : '-'}">-</td> <!-- 승인일 -->
+                    <td>
+                        <span th:class="'status-badge ' + ${tutor.status}"
+                              th:text="${tutor.status == 'pending' ? '대기중' : (tutor.status == 'approved' ? '승인' : (tutor.status == 'reapply' ? '재신청' : '거부'))}">대기중
+                        </span>
+                    </td>
+                    <td>
+                        <a th:href="@{/admin/admin_tutor_detail/{key}(key=${tutor.tutor_key})}" class="action-btn view-btn">상세</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

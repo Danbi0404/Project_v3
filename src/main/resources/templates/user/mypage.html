@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:classappend="${loginUserBean.login} ? 'logged-in' : ''">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORDLY - 마이페이지</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <!-- CSS 파일 -->
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{/css/mypage.css}">
+
+  <!-- 로그인 상태 정보를 JavaScript 변수로 설정 -->
+  <script th:inline="javascript">
+    // 로그인 상태를 전역 변수로 설정
+    window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false; //기본값 false, login값 있으면 우선 적용
+  </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="mypage-container">
+    <h1 class="mypage-title">마이페이지</h1>
+
+    <!-- 로그인 상태에 따라 다른 내용 표시 -->
+    <div th:if="${loginUserBean.login}" class="mypage-content">
+      <!-- 로그인 회원에게 보여줄 내용 -->
+
+      <!-- 사용자 정보 섹션 -->
+      <div class="mypage-section">
+        <h2 class="section-title">기본 정보</h2>
+
+        <div class="user-profile-image">
+          <!-- 이미지 경로가 images/로 시작하면 정적 리소스, 그렇지 않으면 업로드된 파일 -->
+          <img th:if="${loginUserBean.user_image != null}"
+               th:src="${loginUserBean.user_image.startsWith('images/') ? '/' + loginUserBean.user_image : '/uploads/' + loginUserBean.user_image}"
+               alt="프로필 이미지">
+          <div th:unless="${loginUserBean.user_image != null}" class="default-profile-icon">
+            <i class="fi fi-rr-user"></i>
+          </div>
+        </div>
+
+        <div class="user-info-container">
+          <div class="user-info-item">
+            <div class="info-label">아이디</div>
+            <div class="info-value" th:text="${loginUserBean.user_id}">user123</div>
+          </div>
+
+          <div class="user-info-item">
+            <div class="info-label">닉네임</div>
+            <div class="info-value" th:text="${loginUserBean.user_nickname}">사용자닉네임</div>
+          </div>
+
+          <div class="user-info-item">
+            <div class="info-label">회원 유형</div>
+            <div class="info-value" th:text="${loginUserBean.user_type == 'normal' ? '일반회원' : (loginUserBean.user_type == 'tutor' ? '튜터' : '미등록')}">일반회원</div>
+          </div>
+        </div>
+
+        <div class="button-container">
+          <button class="btn btn-primary" onclick="location.href='/user/profile/edit'">프로필 수정</button>
+        </div>
+      </div>
+
+      <!-- 학습 통계 섹션 -->
+      <div class="mypage-section">
+        <h2 class="section-title">학습 현황</h2>
+
+        <div class="learning-stats">
+          <div class="stat-item">
+            <div class="stat-value">30</div>
+            <div class="stat-label">학습 완료 단어</div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-value">5</div>
+            <div class="stat-label">연속 학습일</div>
+          </div>
+
+          <div class="stat-item">
+            <div class="stat-value">중급</div>
+            <div class="stat-label">현재 레벨</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 구독 정보 섹션 -->
+      <div class="mypage-section">
+        <h2 class="section-title">구독 정보</h2>
+
+        <div class="subscription-info" th:if="${isSubscribed}">
+          <div class="user-info-item">
+            <div class="info-label">구독 상태</div>
+            <div class="info-value">활성</div>
+          </div>
+          <div class="user-info-item">
+            <div class="info-label">구독 기간</div>
+            <div class="info-value">
+              <span th:text="${subscriptionInfo.startDate}">2023/01/01</span> ~
+              <span th:text="${subscriptionInfo.endDate}">2023/12/31</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="no-subscription" th:unless="${isSubscribed}">
+          <p>현재 구독 중인 상품이 없습니다.</p>
+          <button class="btn btn-secondary" onclick="location.href='/payment'">구독하기</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 비로그인 회원에게 보여줄 내용 -->
+    <div th:unless="${loginUserBean.login}" class="login-required">
+      <div class="login-message">
+        <i class="fi fi-rr-user-lock"></i>
+        <h2>로그인이 필요합니다</h2>
+        <p>마이페이지를 이용하려면 로그인이 필요합니다.</p>
+        <p>회원이 아니시라면 회원가입 후 이용해주세요.</p>
+
+        <div class="login-buttons">
+          <button class="btn btn-login" onclick="location.href='/user/login'">로그인</button>
+          <button class="btn" onclick="location.href='/user/join'">회원가입</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/mypage.js}"></script>
+</body>
+</html>

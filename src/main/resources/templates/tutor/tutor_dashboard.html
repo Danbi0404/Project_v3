@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORDLY - 튜터 대시보드</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <!-- CSS 파일 -->
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{/css/tutor_dashboard.css}">
+  <!-- 로그인 상태 정보를 JavaScript 변수로 설정 -->
+  <script th:inline="javascript">
+    window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false;
+  </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="dashboard-container">
+    <h1 class="dashboard-title">튜터 대시보드</h1>
+
+    <!-- 성공/오류 메시지 표시 -->
+    <div th:if="${param.createSuccess}" class="message success-message">
+      그룹이 성공적으로 생성되었습니다.
+    </div>
+    <div th:if="${param.error}" class="message error-message">
+      오류가 발생했습니다: <span th:text="${param.error}"></span>
+    </div>
+
+    <!-- 탭 메뉴 -->
+    <div class="dashboard-tabs">
+      <div class="tabs-container">
+        <button class="tab-btn" data-tab="group-management">그룹 관리</button>
+        <button class="tab-btn" data-tab="group-activity">그룹 활동</button>
+      </div>
+      <div class="action-buttons">
+        <a href="/tutor/add_language" class="btn btn-secondary">
+          <i class="fi fi-br-language"></i> 가르칠 언어 추가
+        </a>
+      </div>
+    </div>
+
+    <!-- 그룹 관리 탭 -->
+    <div id="group-management" class="tab-content">
+
+      <!-- 그룹이 없는 경우 -->
+      <div th:if="${!hasGroups}" class="no-group-container">
+        <div class="no-group-message">
+          <i class="fi fi-br-users-alt"></i>
+          <h2>아직 생성된 그룹이 없습니다</h2>
+          <p>학생들을 가르치기 위한 새 그룹을 생성해보세요.</p>
+          <a href="/group/create" class="btn btn-primary">
+            <i class="fi fi-br-plus"></i> 새 그룹 생성하기
+          </a>
+        </div>
+      </div>
+
+      <!-- 그룹이 있는 경우 -->
+      <div th:if="${hasGroups}" class="group-list-container">
+        <div class="section-header">
+          <h2 class="section-title">내 그룹 목록</h2>
+          <div class="action-buttons">
+            <a href="/group/create" class="btn btn-create">
+              <i class="fi fi-br-plus"></i> 새 그룹 생성
+            </a>
+          </div>
+        </div>
+
+        <div class="group-cards">
+          <div th:each="group : ${groupList}" class="group-card">
+            <div class="group-card-header">
+              <h3 class="group-name" th:text="${group.room_name}">그룹명</h3>
+              <span class="group-language" th:text="${group.teach_language}">영어</span>
+            </div>
+            <div class="group-card-body">
+              <div class="group-info">
+                <div class="info-item">
+                  <span class="info-label">생성일</span>
+                  <span class="info-value" th:text="${#dates.format(group.created_date, 'yyyy-MM-dd')}">2023-01-01</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">학생 수</span>
+                  <span class="info-value" th:text="${group.member_count}">0</span>
+                </div>
+                <div class="info-item">
+                  <span class="info-label">신청 대기</span>
+                  <span class="info-value">
+                                        <span th:text="${group.pending_requests}">0</span>
+                                        <span th:if="${group.pending_requests > 0}" class="badge">NEW</span>
+                                    </span>
+                </div>
+              </div>
+            </div>
+            <div class="group-card-footer">
+              <a th:href="@{'/group/manage/' + ${group.group_key}}" class="btn btn-manage">
+                <i class="fi fi-br-settings"></i> 관리하기
+              </a>
+            </div>
+            <div class="group-card-board">
+              <!-- 모집글이 아직 없으면 null, 있으면 board_key 값이 들어가 있는걸로 구분 -->
+              <a th:if="${group.getGroup_board_key()==null}" th:href="@{/board/wordly-talking/write}">
+                모집글 작성하기
+              </a>
+              <a th:if="${group.getGroup_board_key()!=null}" th:href="@{'/board/wordly-talking/detail/' + ${group.getGroup_board_key()}}">
+                모집글 확인하기
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 그룹 활동 탭 -->
+    <div id="group-activity" class="tab-content" style="display: none;">
+      <div class="activity-container">
+        <div class="activity-header">
+          <h2 class="section-title">화상 수업</h2>
+          <p class="coming-soon">화상 채팅 기능은 곧 제공될 예정입니다.</p>
+        </div>
+
+        <div class="activity-content">
+          <div class="group-selector">
+            <label for="activity-group">그룹 선택:</label>
+            <select id="activity-group" class="form-control">
+              <option value="" disabled selected>그룹을 선택하세요</option>
+              <option th:each="group : ${groupList}" th:value="${group.group_key}" th:text="${group.room_name}">그룹명</option>
+            </select>
+          </div>
+
+          <div class="activity-placeholder">
+            <div class="placeholder-icon">
+              <i class="fi fi-br-video-camera"></i>
+            </div>
+            <h3>화상 수업 준비</h3>
+            <p>그룹을 선택하고 수업을 시작하세요. 학생들과 실시간으로 소통할 수 있습니다.</p>
+            <button class="btn btn-primary btn-start-class" disabled>
+              <i class="fi fi-br-play"></i> 수업 시작하기
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/tutor_dashboard.js}"></script>
+</body>
+</html>

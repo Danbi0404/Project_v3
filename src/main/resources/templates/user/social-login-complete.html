@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>로그인 완료</title>
+</head>
+<body>
+<script th:inline="javascript">
+  const loginSuccess = [[${loginSuccess}]];
+
+  if (loginSuccess) {
+    // 로그인 성공 시 부모 창 새로고침 후 현재 창 닫기
+    if (window.opener) {
+      window.opener.location.href = '/main';
+      window.close();
+    } else {
+      window.location.href = '/main';
+    }
+  } else {
+    // 로그인 실패 시
+    if (window.opener) {
+      alert('로그인에 실패했습니다.');
+      window.close();
+    } else {
+      alert('로그인에 실패했습니다.');
+      window.location.href = '/user/login';
+    }
+  }
+</script>
+</body>
+</html>

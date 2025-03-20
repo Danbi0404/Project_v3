@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:classappend="${loginUserBean.login} ? 'logged-in' : ''">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - Learning Platform</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <!-- 로그인 상태 정보를 JavaScript 변수로 설정 -->
+    <script th:inline="javascript">
+        // 로그인 상태를 전역 변수로 설정
+        window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false; //기본값 false, login값 있으면 우선 적용
+    </script>
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.6.0/kakao.min.js"
+            integrity="sha384-6MFdIr0zOira1CHQkedUqJVql0YtcZA1P0nbPrQYJXVJZUkTk/oX4U9GhUIs3/z8"
+            crossorigin="anonymous"></script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="logo">WORDLY</div>
+
+    <!-- 로그인하지 않은 사용자를 위한 환영 메시지 -->
+    <div th:if="${!loginUserBean.login}" class="welcome-section">
+        <h1 class="welcome-title">언어 학습의 새로운 여정을 시작하세요</h1>
+        <p>WORDLY와 함께 새로운 언어를 더 효과적으로 배우세요.</p>
+    </div>
+
+    <!-- 로그인한 사용자를 위한 학습 콘텐츠 -->
+    <div th:if="${loginUserBean.login}" class="word-section">
+        <div class="word-header">
+            <h2 class="word-title">Word of the Day</h2>
+            <div class="highlight"></div>
+        </div>
+        <div class="current-level">CURRENT LEVEL : 1</div>
+        <ul class="word-list">
+            <li>Apple</li>
+            <li>Let me home</li>
+            <li>I miss my bed</li>
+        </ul>
+        <div class="answer-section">
+            <span class="answer-key">ANSWER KEY</span>
+            <div class="nav-buttons">
+                <button class="nav-button"><i class="fi fi-sr-angle-left"></i></button>
+                <button class="nav-button"><i class="fi fi-sr-angle-right"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/main.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<link rel="stylesheet" th:href="@{/css/sidebar.css}">
+</body>
+</html>

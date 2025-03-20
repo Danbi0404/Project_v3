@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:classappend="${loginUserBean.login} ? 'logged-in' : ''">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORDLY - 학습페이지</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <!-- CSS 파일 -->
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{/css/learn.css}">
+
+  <!-- 로그인 상태 정보를 JavaScript 변수로 설정 -->
+  <script th:inline="javascript">
+    // 로그인 상태를 전역 변수로 설정
+    window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false; //기본값 false, login값 있으면 우선 적용
+  </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="learn_page-container">
+    <h1 class="learn_page-title">학습페이지</h1>
+
+  </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORDLY - 그룹 관리</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <!-- CSS 파일 -->
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{/css/tutor_group.css}">
+  <!-- 로그인 상태 정보를 JavaScript 변수로 설정 -->
+  <script th:inline="javascript">
+    window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false;
+  </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="group-manage-container">
+    <div class="group-header">
+      <a href="/tutor/dashboard" class="back-link">
+        <i class="fi fi-br-angle-left"></i> 대시보드로 돌아가기
+      </a>
+      <h1 class="group-title" th:text="${groupInfo.room_name}">그룹명</h1>
+    </div>
+
+    <!-- 성공/오류 메시지 표시 -->
+    <div th:if="${param.approveSuccess}" class="message success-message">
+      가입 신청이 승인되었습니다.
+    </div>
+    <div th:if="${param.rejectSuccess}" class="message success-message">
+      가입 신청이 거부되었습니다.
+    </div>
+    <div th:if="${param.error}" class="message error-message">
+      오류가 발생했습니다: <span th:text="${param.error}"></span>
+    </div>
+
+    <!-- 그룹 정보 섹션 -->
+    <div class="group-info-section">
+      <h2 class="section-title">그룹 정보</h2>
+      <div class="group-info-content">
+        <div class="info-row">
+          <div class="info-label">교육 언어</div>
+          <div class="info-value" th:text="${groupInfo.teach_language}">영어</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">생성일</div>
+          <div class="info-value" th:text="${#dates.format(groupInfo.created_date, 'yyyy-MM-dd')}">2023-01-01</div>
+        </div>
+        <div class="info-row">
+          <div class="info-label">학생 수</div>
+          <div class="info-value" th:text="${groupInfo.member_count}">0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 가입 신청 섹션 -->
+    <div class="join-requests-section">
+      <h2 class="section-title">가입 신청 관리</h2>
+
+      <!-- 신청이 없는 경우 -->
+      <div th:if="${#lists.isEmpty(pendingRequests)}" class="no-requests-message">
+        <i class="fi fi-br-inbox"></i>
+        <p>현재 대기 중인 신청이 없습니다.</p>
+      </div>
+
+      <!-- 신청이 있는 경우 -->
+      <div th:if="${!#lists.isEmpty(pendingRequests)}" class="requests-list">
+        <div th:each="request : ${pendingRequests}" class="request-item">
+          <div class="request-user-info">
+            <div class="user-avatar">
+              <img th:if="${request.user_image != null}"
+                   th:src="${request.user_image.startsWith('images/') ? '/' + request.user_image : '/uploads/' + request.user_image}"
+                   alt="사용자 이미지">
+              <i th:unless="${request.user_image != null}" class="fi fi-rr-user"></i>
+            </div>
+            <div class="user-details">
+              <div class="user-name" th:text="${request.user_name}">사용자명</div>
+              <div class="user-nickname" th:text="${request.user_nickname}">닉네임</div>
+              <div class="request-date" th:text="${#dates.format(request.request_date, 'yyyy-MM-dd HH:mm')}">2023-01-01 12:00</div>
+            </div>
+          </div>
+          <div class="request-message" th:text="${request.request_message}">가입 신청 메시지...</div>
+          <div class="request-actions">
+            <form th:action="@{'/group/approve/' + ${request.request_key}}" method="post" class="action-form">
+              <input type="hidden" name="groupKey" th:value="${groupInfo.group_key}" />
+              <button type="submit" class="btn btn-approve">승인</button>
+            </form>
+            <button type="button" class="btn btn-reject" th:onclick="'showRejectForm(' + ${request.request_key} + ')'">거부</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 학생 관리 섹션 -->
+    <div class="members-section">
+      <h2 class="section-title">학생 관리</h2>
+
+      <!-- 멤버가 없는 경우 -->
+      <div th:if="${#lists.isEmpty(groupMemberList)}">
+        <p class="no-members-message">현재 그룹에 속한 학생이 없습니다.</p>
+      </div>
+
+      <!-- 멤버가 있는 경우 -->
+      <ul th:if="${!#lists.isEmpty(groupMemberList)}" class="members-list">
+        <li th:each="member : ${groupMemberList}" class="member-item">
+          <div class="member-info">
+            <div class="member-name" th:text="${member.user_nickname}">닉네임</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 거부 사유 모달 (숨김 상태로 시작) -->
+<div id="reject-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>가입 신청 거부</h3>
+      <span class="close-modal">&times;</span>
+    </div>
+    <div class="modal-body">
+      <form id="reject-form" th:action="@{'/group/reject/' + ${request_key}}" method="post">
+        <input type="hidden" id="reject-request-key" name="requestKey" th:value="${request_key}" />
+        <input type="hidden" name="groupKey" th:value="${groupInfo.group_key}" />
+
+        <div class="form-group">
+          <label for="rejectReason">거부 사유</label>
+          <textarea id="rejectReason" name="rejectReason" class="form-control" rows="4" required></textarea>
+          <small class="form-text">학생에게 전달될 거부 사유를 입력해주세요.</small>
+        </div>
+
+        <div class="button-container">
+          <button type="submit" class="btn btn-reject">거부 확인</button>
+          <button type="button" class="btn btn-cancel close-modal">취소</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/tutor_group.js}"></script>
+</body>
+</html>

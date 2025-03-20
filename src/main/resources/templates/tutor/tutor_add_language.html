@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - 가르칠 언어 추가 신청</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/tutor.css}">
+    <script th:inline="javascript">
+        window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false;
+    </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- 메인 콘텐츠 -->
+<div class="main-content">
+    <div class="tutor-join-container">
+        <h1 class="tutor-join-title">가르칠 언어 추가 신청</h1>
+
+        <!-- 오류 메시지 표시 -->
+        <div th:if="${param.error}" class="message error-message">
+            <span th:if="${param.error == 'file-required'}">자격증 파일을 업로드해주세요.</span>
+            <span th:if="${param.error == 'apply-failed'}">신청 처리 중 오류가 발생했습니다.</span>
+        </div>
+
+        <div class="tutor-join-info">
+            <p>추가로 가르치고 싶은 언어를 신청해주세요.</p>
+            <p>자격증 또는 증명서 파일을 함께 제출해주세요.</p>
+        </div>
+
+        <!-- 현재 가르칠 수 있는 언어 표시 -->
+        <div class="current-languages">
+            <h3>현재 가르칠 수 있는 언어</h3>
+            <ul class="language-list">
+                <li th:each="language : ${currentLanguages}" th:text="${language}">English</li>
+            </ul>
+        </div>
+
+        <form th:action="@{/tutor/add_language_pro}" method="post" enctype="multipart/form-data">
+            <!-- 자격증 PDF 업로드 -->
+            <div class="form-group">
+                <label for="certificate-file">자격증 또는 증명서 (PDF)</label>
+                <div class="file-upload-container">
+                    <div class="file-input-container">
+                        <input type="file" id="certificate-file" name="certFiles" class="form-control" accept=".pdf" multiple>
+                        <small class="file-format-info">* PDF 파일만 가능 (최대 5MB)</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 가르칠 언어 선택 -->
+            <div class="form-group">
+                <label for="new-language">추가할 언어</label>
+                <select id="new-language" name="newLanguage" class="form-control" required>
+                    <option value="">언어를 선택하세요</option>
+                    <option value="korean" th:unless="${currentLanguages.contains('korean')}">한국어</option>
+                    <option value="english" th:unless="${currentLanguages.contains('english')}">영어</option>
+                    <option value="japanese" th:unless="${currentLanguages.contains('japanese')}">일본어</option>
+                    <option value="chinese" th:unless="${currentLanguages.contains('chinese')}">중국어</option>
+                    <option value="spanish" th:unless="${currentLanguages.contains('spanish')}">스페인어</option>
+                    <option value="french" th:unless="${currentLanguages.contains('french')}">프랑스어</option>
+                    <option value="german" th:unless="${currentLanguages.contains('german')}">독일어</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">신청하기</button>
+            <a href="/tutor/dashboard" class="btn btn-secondary">취소</a>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+</body>
+</html>

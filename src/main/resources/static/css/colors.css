@@ -1,0 +1,30 @@
+/*
+ * colors.css - WORDLY 프로젝트 색상 정의
+ * 프로젝트 전체에서 사용되는 색상 값을 정의합니다.
+ */
+
+/* 메인 컬러 */
+.color-primary { color: #614D42; }
+.bg-primary { background-color: #614D42; }
+
+/* 보조 컬러 */
+.color-secondary { color: #D1DE74; }
+.bg-secondary { background-color: #D1DE74; }
+
+/* 강조 컬러 */
+.color-accent { color: #E0912F; }
+.bg-accent { background-color: #E0912F; }
+
+/* 배경 컬러 */
+.bg-light { background-color: #F5EBE2; }
+.bg-main { background-color: #E0C5B4; }
+.bg-sidebar { background-color: #8B6E5E; }
+
+/* 텍스트 컬러 */
+.text-dark { color: #333333; }
+.text-light { color: #FFFFFF; }
+.text-error { color: #FF4136; }
+.text-success { color: #2ECC40; }
+
+/* 테두리 컬러 */
+.border-color { border-color: #DDDDDD; }

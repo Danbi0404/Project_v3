@@ -1,0 +1,191 @@
+/* 관리자 페이지 공통 스타일 */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #E0C5B4;
+    display: flex;
+}
+
+/* 관리자 사이드바 */
+.admin-sidebar {
+    width: 200px;
+    background-color: #614D42;
+    color: #F5EBE2;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+}
+
+.admin-logo {
+    font-family: 'Lilita One', sans-serif;
+    font-size: 28px;
+    color: #E0912F;
+    text-align: center;
+    padding: 20px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(245, 235, 226, 0.2);
+    cursor: pointer;
+}
+
+.admin-menu {
+    padding: 0 15px;
+    flex: 1;
+}
+
+.admin-menu-title {
+    font-family: 'Phudu', cursive;
+    font-size: 16px;
+    color: #D1DE74;
+    margin-bottom: 15px;
+    padding-left: 10px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    color: #F5EBE2;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.menu-item i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.menu-item:hover {
+    background-color: rgba(245, 235, 226, 0.1);
+}
+
+.menu-item.active {
+    background-color: #D1DE74;
+    color: #614D42;
+}
+
+.admin-footer {
+    padding: 15px;
+    border-top: 1px solid rgba(245, 235, 226, 0.2);
+    margin-top: auto;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    color: #F5EBE2;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.3s;
+}
+
+.logout-btn i {
+    margin-right: 10px;
+}
+
+.logout-btn:hover {
+    background-color: rgba(245, 235, 226, 0.1);
+}
+
+/* 관리자 메인 콘텐츠 */
+.admin-main {
+    margin-left: 200px;
+    padding: 30px;
+    width: calc(100% - 200px);
+    box-sizing: border-box;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.admin-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 28px;
+    position: relative;
+    display: inline-block;
+}
+
+.admin-title::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #D1DE74;
+}
+
+.admin-user-info {
+    color: #614D42;
+    font-weight: bold;
+}
+
+/* 관리자 시작 페이지 안내 메시지 */
+.admin-welcome {
+    background-color: white;
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.welcome-icon {
+    font-size: 48px;
+    color: #E0912F;
+    margin-right: 20px;
+}
+
+.welcome-message h2 {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    margin-bottom: 10px;
+}
+
+.welcome-message p {
+    color: #666;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .admin-sidebar {
+        width: 60px;
+    }
+
+    .admin-logo {
+        font-size: 20px;
+    }
+
+    .admin-menu-title,
+    .menu-item span,
+    .logout-btn span {
+        display: none;
+    }
+
+    .menu-item,
+    .logout-btn {
+        justify-content: center;
+    }
+
+    .menu-item i,
+    .logout-btn i {
+        margin-right: 0;
+    }
+
+    .admin-main {
+        margin-left: 60px;
+        width: calc(100% - 60px);
+    }
+}

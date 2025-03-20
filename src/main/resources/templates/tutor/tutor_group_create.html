@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WORDLY - 그룹 생성</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <!-- CSS 파일 -->
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{/css/tutor_group.css}">
+  <!-- 로그인 상태 정보를 JavaScript 변수로 설정 -->
+  <script th:inline="javascript">
+    window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false;
+  </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div class="main-content">
+  <div class="group-create-container">
+    <h1 class="group-title">새 그룹 생성</h1>
+
+    <!-- 오류 메시지 표시 -->
+    <div th:if="${param.error}" class="message error-message">
+      오류가 발생했습니다: <span th:text="${param.error}"></span>
+    </div>
+
+    <form th:action="@{/group/create_pro}" method="post">
+      <input type="hidden" name="tutor_key" th:value="${tutorKey}" />
+
+      <div class="form-group">
+        <label for="room_name">그룹명</label>
+        <input type="text" id="room_name" name="room_name" class="form-control" required>
+        <small class="form-text">학생들이 볼 수 있는 그룹 이름입니다.</small>
+      </div>
+
+      <div class="form-group">
+        <label for="teach_language">교육 언어</label>
+        <select id="teach_language" name="teach_language" class="form-control" required>
+          <option value="">언어를 선택하세요</option>
+          <option value="korean">한국어</option>
+          <option value="english">영어</option>
+          <option value="japanese">일본어</option>
+          <option value="chinese">중국어</option>
+          <option value="spanish">스페인어</option>
+          <option value="french">프랑스어</option>
+          <option value="german">독일어</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="group_description">그룹 설명</label>
+        <textarea id="group_description" name="group_description" class="form-control" rows="4"></textarea>
+        <small class="form-text">그룹의 목적이나 학습 계획 등을 설명해주세요.</small>
+      </div>
+
+      <div class="button-container">
+        <button type="submit" class="btn btn-primary">그룹 생성하기</button>
+        <a href="/tutor/dashboard" class="btn btn-cancel">취소</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- 언어 추가 메시지 -->
+<div th:if="${param.needLanguage}" class="message warning-message">
+  <p>해당 언어로 그룹을 생성하려면 먼저 가르칠 언어로 등록해야 합니다.</p>
+  <p>
+    <strong th:text="${#strings.capitalize(param.needLanguage)}">[언어]</strong> 언어를 가르칠 언어로 추가하시겠습니까?
+  </p>
+  <div class="language-action">
+    <a th:href="@{/tutor/add_language}" class="btn btn-primary">
+      <i class="fi fi-br-language"></i> 언어 추가 신청하기
+    </a>
+  </div>
+</div>
+
+<!-- 오류 메시지 표시 -->
+<div th:if="${param.error}" class="message error-message">
+  <span th:if="${param.error == 'language-mismatch'}">
+    튜터로 승인받은 언어만 그룹을 생성할 수 있습니다. 다른 언어로 그룹을 생성하려면 해당 언어에 대한 튜터 신청이 필요합니다.
+  </span>
+  <span th:if="${param.error == 'create-failed'}">
+    그룹 생성 중 오류가 발생했습니다.
+  </span>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/tutor_group.js}"></script>
+</body>
+</html>

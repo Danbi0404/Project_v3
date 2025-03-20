@@ -1,0 +1,344 @@
+/* 관리자 페이지 공통 스타일 */
+.admin-container {
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.admin-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 28px;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+}
+
+.admin-title::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #D1DE74;
+}
+
+/* 알림 메시지 */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.alert-success {
+    background-color: rgba(46, 204, 64, 0.2);
+    color: #2ECC40;
+}
+
+.alert-danger {
+    background-color: rgba(255, 65, 54, 0.2);
+    color: #FF4136;
+}
+
+/* 필터 섹션 */
+.filter-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #F5EBE2;
+    border-radius: 8px;
+}
+
+.filter-label {
+    font-weight: bold;
+    margin-right: 15px;
+    color: #614D42;
+}
+
+.filter-options {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-options a {
+    padding: 8px 15px;
+    border-radius: 30px;
+    text-decoration: none;
+    color: #614D42;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.filter-options a:hover {
+    background-color: rgba(97, 77, 66, 0.1);
+}
+
+.filter-options a.active {
+    background-color: #D1DE74;
+    color: #333;
+}
+
+/* 테이블 스타일 */
+.table-container {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    background-color: #614D42;
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-family: 'Phudu', cursive;
+}
+
+.data-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.data-table tbody tr:hover {
+    background-color: #F5EBE2;
+}
+
+.no-data {
+    text-align: center;
+    padding: 30px;
+    color: #999;
+}
+
+/* 상태 배지 */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-badge.pending {
+    background-color: #FFF9C4;
+    color: #FFA000;
+}
+
+.status-badge.approved {
+    background-color: #C8E6C9;
+    color: #388E3C;
+}
+
+.status-badge.rejected {
+    background-color: #FFCDD2;
+    color: #D32F2F;
+}
+
+.status-badge.reapply {
+    background-color: #E0912F;
+    color: white;
+}
+
+/* 액션 버튼 */
+.action-btn {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.view-btn {
+    background-color: #614D42;
+    color: white;
+}
+
+.view-btn:hover {
+    background-color: #503d34;
+}
+
+/* 상세 페이지 스타일 */
+.detail-container {
+    padding: 20px;
+    background-color: #F5EBE2;
+    border-radius: 8px;
+}
+
+.detail-section {
+    margin-bottom: 30px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.section-title {
+    padding: 15px;
+    background-color: #614D42;
+    color: white;
+    font-family: 'Phudu', cursive;
+    font-size: 18px;
+    margin: 0;
+}
+
+.detail-content {
+    padding: 20px;
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 20px;
+    border: 3px solid #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #eee;
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-image .no-image {
+    font-size: 48px;
+    color: #ccc;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.info-row {
+    display: flex;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.info-label {
+    width: 120px;
+    font-weight: bold;
+    color: #614D42;
+}
+
+.info-value {
+    flex: 1;
+}
+
+.file-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    background-color: #F5EBE2;
+    color: #614D42;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.file-link:hover {
+    background-color: #E0C5B4;
+}
+
+.file-link i {
+    margin-right: 5px;
+}
+
+.no-file {
+    color: #999;
+    font-style: italic;
+}
+
+/* 액션 버튼 */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.action-form {
+    flex: 1;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Phudu', cursive;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.btn-approve {
+    background-color: #388E3C;
+    color: white;
+}
+
+.btn-approve:hover {
+    background-color: #2E7D32;
+}
+
+.btn-reject {
+    background-color: #D32F2F;
+    color: white;
+}
+
+.btn-reject:hover {
+    background-color: #C62828;
+}
+
+.btn-back {
+    background-color: #614D42;
+    color: white;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.btn-back:hover {
+    background-color: #503d34;
+}
+
+/* 반응형 조정 */
+@media (max-width: 768px) {
+    .profile-section {
+        flex-direction: column;
+    }
+
+    .profile-image {
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .info-row {
+        flex-direction: column;
+    }
+
+    .info-label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+}

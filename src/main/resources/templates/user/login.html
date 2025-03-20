@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/user_login.css}">
+    <script th:inline="javascript">
+        // 로그인 상태를 전역 변수로 설정
+        window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false;
+        // 사용자 정보를 JavaScript 변수로 선언
+        const userName = /*[[${loginUserBean.user_name}]]*/;
+    </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- 로그인 -->
+<div class="login-container">
+    <div class="logo">WORDLY</div>
+    <h2 class="login-title">로그인</h2>
+
+    <form th:action="@{/user/login_pro}" th:object="${LoginUser}" th:method="post">
+        <div class="form-group">
+            <label for="login_user_id">이메일</label>
+            <input id="login_user_id" type="text" th:field="*{user_id}" class="form-control" placeholder="example@wordly.com"/>
+        </div>
+
+        <div class="form-group">
+            <label for="login_user_pw">비밀번호</label>
+            <input id="login_user_pw" type="password" th:field="*{user_pw}" class="form-control" placeholder="비밀번호를 입력해주세요"/>
+        </div>
+
+        <button type="submit" class="btn">로그인</button>
+
+        <div class="login-help-links">
+            <a th:href="@{/user/find-account}" class="help-link">아이디/비밀번호 찾기</a>
+            <span class="link-divider">|</span>
+            <a th:href="@{/user/join}" class="help-link">회원가입</a>
+        </div>
+
+        <!-- 소셜 로그인 -->
+        <div class="social-login">
+            <div class="social-login-title">
+                <span>또는</span>
+            </div>
+
+            <div class="social-buttons">
+                <button type="button" class="social-login-button" onclick="loginWithNaver()">
+                    <img th:src="@{/images/naver_login.png}" alt="네이버 로그인">
+                </button>
+                <button type="button" class="social-login-button" onclick="loginWithKakao()">
+                    <img th:src="@{/images/kakao_login.png}" alt="카카오 로그인">
+                </button>
+            </div>
+        </div>
+
+        <!-- Hidden fields -->
+        <input type="hidden" th:field="*{user_key}" th:value=null />
+        <input type="hidden" th:field="*{user_money}" th:value=null />
+        <input type="hidden" th:field="*{user_point}" th:value=null />
+        <input type="hidden" th:field="*{user_bad_point}" th:value=null />
+        <input type="hidden" th:field="*{create_time}" th:value=null />
+        <input type="hidden" th:field="*{user_name}" th:value=null />
+        <input type="hidden" th:field="*{user_type}" th:value=null />
+    </form>
+
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/user_login.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+</body>
+</html>

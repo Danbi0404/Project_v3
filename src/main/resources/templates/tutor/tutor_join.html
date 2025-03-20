@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>튜터 전환 신청</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/tutor.css}">
+    <script th:inline="javascript">
+        // 로그인 상태를 전역 변수로 설정
+        window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false;
+        // 재신청 여부를 전역 변수로 설정
+        window.isReapplying = /*[[${isReapplying}]]*/ false;
+        // 기존 인증서 파일 정보를 JavaScript에서 사용할 수 있도록 설정
+        window.existingCertificateFiles = /*[[${certificateFiles}]]*/ [];
+    </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- 튜터 신청 -->
+<div class="main-content">
+    <div class="tutor-join-container">
+        <h1 class="tutor-join-title">튜터 전환 신청</h1>
+
+        <!-- 거부 사유 메시지 (재신청인 경우에만 표시) -->
+        <div th:if="${isReapplying}" class="reject-reason-box">
+            <div class="message error-message">
+                <h3>이전 신청 거부 사유</h3>
+                <p th:text="${tutorInfo.reject_reason}">거부 사유가 표시됩니다.</p>
+                <p>아래 내용을 수정하여 다시 신청해주세요.</p>
+            </div>
+        </div>
+
+        <div class="tutor-join-info">
+            <p>WORDLY에서 언어 튜터로 활동하고 싶으신가요?</p>
+            <p>아래 양식을 작성하여 튜터 신청을 완료해주세요.</p>
+        </div>
+
+        <form th:action="@{/tutor/tutor_join_pro}" method="post" enctype="multipart/form-data">
+            <!-- 재신청 시 tutor_key 값 전달 -->
+            <input th:if="${isReapplying}" type="hidden" name="tutor_key" th:value="${tutorInfo.tutor_key}" />
+
+            <!-- 프로필 이미지 업로드 -->
+            <div class="form-group">
+                <label for="profile-image">프로필 이미지</label>
+                <div class="file-upload-container">
+                    <div class="image-preview-container">
+                        <div id="profile-image-preview" class="image-preview">
+                            <!-- 기존 프로필 이미지가 있으면 표시 -->
+                            <img th:if="${isReapplying && tutorInfo.tutor_image != null}"
+                                 th:src="@{'/uploads/' + ${tutorInfo.tutor_image}}"
+                                 alt="Profile Preview">
+                            <i th:unless="${isReapplying && tutorInfo.tutor_image != null}" class="fi fi-rr-user"></i>
+                        </div>
+                    </div>
+                    <div class="file-input-container">
+                        <input type="file" id="profile-image" name="profileImage" class="form-control" accept="image/*" onchange="previewImage(this, 'profile-image-preview')">
+                        <small class="file-format-info">* JPG, PNG, GIF 이미지 (최대 2MB)</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 자격증 PDF 업로드 -->
+            <div class="form-group">
+                <label for="certificate-file">자격증 또는 증명서 (PDF)</label>
+                <div class="file-upload-container">
+                    <div class="file-input-container">
+                        <input type="file" id="certificate-file" class="form-control" accept=".pdf">
+                        <button type="button" id="add-pdf-btn" class="btn btn-secondary">파일 추가</button>
+                        <small class="file-format-info">* PDF 파일만 가능 (최대 5MB)</small>
+
+                        <!-- 선택된 PDF 파일 목록 표시 영역 -->
+                        <div id="pdf-files-list" class="pdf-files-list">
+                            <!-- 기존 인증서 파일이 있으면 표시 (재신청인 경우) -->
+                            <div th:if="${isReapplying}" th:each="file : ${certificateFiles}"
+                                 th:id="'existing-file-' + ${file.file_key}" class="file-item existing-file">
+                                <i class="fi fi-rr-document"></i>
+                                <span th:text="${file.original_filename}" class="file-name">파일명.pdf</span>
+                                <input type="hidden" name="keepFiles" th:value="${file.file_key}" />
+                                <div class="file-actions">
+                                    <button type="button" class="view-file-btn" th:data-id="${file.file_key}"
+                                            th:data-path="@{'/uploads/' + ${file.file_path}}">
+                                        <i class="fi fi-rr-eye"></i>
+                                    </button>
+                                    <button type="button" class="remove-file-btn" th:data-id="${file.file_key}">
+                                        <i class="fi fi-rr-cross-small"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 실제 폼 제출 시 사용될 hidden input들 -->
+                        <div id="certificate-files-container">
+                            <!-- 여기에 새 파일들을 위한 input 요소들이 동적으로 추가됨 -->
+                            <!-- 파일이 없는 경우에도 certFiles 매개변수가 전송되도록 빈 input 추가 -->
+                            <input type="file" name="certFiles" style="display: none;" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 모국어 선택 -->
+            <div class="form-group">
+                <label for="born-language">모국어</label>
+                <select id="born-language" name="born_language" class="form-control" required>
+                    <option value="">모국어를 선택하세요</option>
+                    <option value="korean" th:selected="${isReapplying && tutorInfo.born_language == 'korean'}">한국어</option>
+                    <option value="english" th:selected="${isReapplying && tutorInfo.born_language == 'english'}">영어</option>
+                </select>
+            </div>
+
+            <!-- 가르칠 언어 선택 -->
+            <div class="form-group">
+                <label for="teach-language">가르칠 언어</label>
+                <select id="teach-language" name="teach_language" class="form-control" required>
+                    <option value="">가르칠 언어를 선택하세요</option>
+                    <option value="korean" th:selected="${isReapplying && tutorInfo.teach_language == 'korean'}">한국어</option>
+                    <option value="english" th:selected="${isReapplying && tutorInfo.teach_language == 'english'}">영어</option>
+                </select>
+            </div>
+
+            <!-- 재신청 시 tutor_key 값 전달 -->
+            <input th:if="${isReapplying}" type="hidden" name="tutor_key" th:value="${tutorInfo.tutor_key}" />
+            <!-- 프로필 이미지 유지 여부 전달 -->
+            <input th:if="${isReapplying && tutorInfo.tutor_image != null}" type="hidden" name="keepProfileImage" value="true" />
+            <input th:if="${isReapplying && tutorInfo.tutor_image != null}" type="hidden" name="existingProfileImage" th:value="${tutorInfo.tutor_image}" />
+
+            <button type="submit" class="btn btn-primary">신청하기</button>
+            <a href="/tutor/tutor_page" class="btn btn-secondary">취소</a>
+        </form>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/tutor_join.js}"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+/*
+ * user_login.css - 로그인 페이지 스타일
+ * 관련 파일: login.html, user_login.js
+ */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #E0C5B4;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-container {
+    background-color: #F5EBE2;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.login-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    background-color: #614D42;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Phudu', cursive;
+    text-transform: uppercase;
+    margin-top: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #8B6E5E;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #614D42;
+    text-decoration: none;
+    font-family: 'Phudu', cursive;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* 아이디, 비밀번호 찾기, 회원가입 css (로그인 페이지 / 로그인 버튼 아래에 위치) */
+.login-help-links {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.help-link {
+    color: #614D42;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.help-link:hover {
+    color: #E0912F;
+    text-decoration: underline;
+}
+
+.link-divider {
+    margin: 0 8px;
+    color: #999;
+}
+
+
+/* 소셜 로그인 버튼 */
+.social-login {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.social-login-title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.social-login-title::before,
+.social-login-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.social-login-title span {
+    padding: 0 15px;
+    font-family: 'Phudu', cursive;
+    color: #888;
+    font-size: 14px;
+}
+
+.social-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.social-login-button {
+    width: 100%;
+    cursor: pointer;
+    border: none;
+    background: none;
+    transition: transform 0.3s ease;
+}
+
+.social-login-button:hover {
+    transform: translateY(-2px);
+}
+
+.social-login-button img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+}

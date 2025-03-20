@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - 관리자 페이지</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/admin_page.css}">
+</head>
+<body>
+<!-- 관리자 사이드바 -->
+<div class="admin-sidebar">
+    <div class="admin-logo" onclick="location.href='/admin/admin_page'">WORDLY</div>
+
+    <div class="admin-menu">
+        <div class="admin-menu-title">관리 메뉴</div>
+
+        <a href="/admin/admin_page" class="menu-item active">
+            <i class="fi fi-rr-apps"></i>
+            대시보드
+        </a>
+
+        <a href="/admin/admin_tutor_list" class="menu-item">
+            <i class="fi fi-rr-users-alt"></i>
+            튜터 관리
+        </a>
+    </div>
+
+    <div class="admin-footer">
+        <a href="/user/logout" class="logout-btn">
+            <i class="fi fi-rr-sign-out-alt"></i>
+            로그아웃
+        </a>
+    </div>
+</div>
+
+<!-- 관리자 메인 콘텐츠 -->
+<div class="admin-main">
+    <div class="admin-header">
+        <h1 class="admin-title">관리자 대시보드</h1>
+
+    </div>
+
+    <!-- 관리자 시작 페이지 안내 메시지 -->
+    <div class="admin-welcome">
+        <div class="welcome-icon">
+            <i class="fi fi-rr-shield-check"></i>
+        </div>
+        <div class="welcome-message">
+            <h2>관리자 페이지에 오신 것을 환영합니다</h2>
+            <p>왼쪽 메뉴에서 원하시는 관리 기능을 선택해주세요.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

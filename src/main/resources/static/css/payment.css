@@ -1,0 +1,120 @@
+/*
+ * payment.css - 결제 페이지 스타일
+ * 관련 파일: payment.html, payment.js
+ */
+
+.payment-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #F5EBE2;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.payment-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.payment-options-container {
+    margin-bottom: 30px;
+}
+
+.payment-option {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-option:hover {
+    border-color: #D1DE74;
+    background-color: #f9f7f5;
+}
+
+.payment-option.selected {
+    border-color: #D1DE74;
+    background-color: #f9f7f5;
+}
+
+.option-title {
+    font-family: 'Phudu', cursive;
+    font-size: 18px;
+    color: #614D42;
+    margin-bottom: 5px;
+}
+
+.option-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #E0912F;
+}
+
+.option-description {
+    color: #666;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-kakao {
+    background-color: #FEE500;
+    color: #333;
+    flex: 1;
+}
+
+.btn-kakao:hover {
+    background-color: #E6CF00;
+}
+
+.btn-toss {
+    background-color: #0064FF;
+    color: white;
+    flex: 1;
+}
+
+.btn-toss:hover {
+    background-color: #0050CC;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #614D42;
+    text-decoration: none;
+    font-family: 'Phudu', cursive;
+    font-size: 14px;
+}
+
+/* 구독중일시 결제페이지 알림 css */
+
+.subscription-alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.payment-options-container.disabled .payment-option {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+button:disabled {
+    background-color: #cccccc !important;
+    cursor: not-allowed !important;
+}

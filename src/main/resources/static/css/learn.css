@@ -1,0 +1,20 @@
+/*
+ * learn.css - 튜터페이지 스타일
+ * 관련 파일: learn_page.html
+ */
+
+.learn_page-container {
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.learn_page-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 28px;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+}

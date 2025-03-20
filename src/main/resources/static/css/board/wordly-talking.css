@@ -1,0 +1,190 @@
+/*
+ * wordly-talking.css - 워들리 토킹 게시판 스타일
+ * 워들리 토킹 게시판 페이지 전용 스타일을 정의합니다.
+ */
+
+/* 워들리 토킹 특화 스타일 */
+.post-item {
+    transition: background-color 0.3s ease;
+}
+
+.post-item:hover {
+    background-color: #f9f9f9;
+}
+
+.post-title a {
+    color: #333;
+    transition: color 0.3s;
+}
+
+.post-title a:hover {
+    color: #FF902F;
+}
+
+/* 좋아요 버튼 스타일 */
+.like-count {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.like-count i {
+    color: #FF902F;
+}
+
+/* 카테고리 마커 */
+.post-category i {
+    color: #FF902F;
+    margin-right: 5px;
+}
+
+/* 자유 게시판 스타일 커스터마이징 */
+.submenu-item.active {
+    background-color: #FFF2E8;
+}
+
+/* 메뉴 강조 스타일 - 밑줄 스타일로 수정 */
+.menu-item.active {
+    color: #333;
+    font-weight: bold;
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-color: #FF902F;
+    text-decoration-thickness: 2px;
+}
+
+/* 활성화된 서브메뉴 아이템 스타일 */
+.submenu-item.active {
+    color: #333;
+    font-weight: bold;
+    position: relative;
+    padding-left: 15px;
+}
+
+/* 활성화된 서브메뉴 아이템 왼쪽에 오렌지색 막대 추가 */
+.submenu-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 80%;
+    background-color: #FF902F;
+    border-radius: 2px;
+}
+
+/* 글 내용 하이라이트 */
+.post-content strong,
+.post-content b {
+    color: #FF902F;
+}
+
+/* 대댓글 스타일 */
+.comment-reply {
+    margin-left: 20px;
+    border-left: 2px solid #e5e5e5;
+    padding-left: 30px;
+    position: relative;
+}
+
+.comment-reply::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: -1px;
+    width: 15px;
+    height: 2px;
+    background-color: #e5e5e5;
+}
+
+.reply-form {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    display: none;
+}
+
+.reply-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+    min-height: 80px;
+    resize: vertical;
+    font-family: 'KoPubWorldDotum', sans-serif;
+    margin-bottom: 10px;
+}
+
+.reply-submit {
+    padding: 8px 15px;
+    background-color: #D1DE74;
+    color: #333;
+    border: none;
+    border-radius: 5px;
+    font-family: 'KoPubWorldDotum', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reply-submit:hover {
+    background-color: #c1ce64;
+}
+
+.cancel-reply-btn {
+    padding: 8px 15px;
+    background-color: #f5f5f5;
+    color: #666;
+    border: none;
+    border-radius: 5px;
+    font-family: 'KoPubWorldDotum', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.cancel-reply-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.reply-comment-btn {
+    font-size: 13px;
+    color: #666;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 15px;
+}
+
+.reply-comment-btn:hover {
+    color: #333;
+    text-decoration: underline;
+}
+
+/* 모바일 최적화 */
+@media (max-width: 768px) {
+    .menu-subcategory {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .submenu-item {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 5px 10px;
+    }
+
+    .submenu-item.active {
+        padding-left: 10px;
+    }
+
+    .submenu-item.active::before {
+        display: none;
+    }
+}

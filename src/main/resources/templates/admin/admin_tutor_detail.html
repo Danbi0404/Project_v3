@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - 튜터 신청 상세</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" th:href="@{/css/admin_page.css}">
+</head>
+<style>
+    /* 자격증 관련 css */
+    .certificate-files-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .file-item {
+        background-color: #f5f5f5;
+        padding: 8px 12px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+    }
+
+    .file-item i {
+        margin-right: 8px;
+        color: #E0912F;
+    }
+
+    .pdf-files-list {
+        margin-top: 10px;
+    }
+
+    .reject-reason-form {
+        background-color: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .reject-reason-form h3 {
+        font-family: 'Phudu', cursive;
+        color: #614D42;
+        margin-bottom: 15px;
+        font-size: 18px;
+    }
+</style>
+<body>
+<!-- 관리자 사이드바 -->
+<div class="admin-sidebar">
+    <div class="admin-logo" onclick="location.href='/admin/admin_page'">WORDLY</div>
+
+    <div class="admin-menu">
+        <div class="admin-menu-title">관리 메뉴</div>
+
+        <a href="/admin/admin_page" class="menu-item">
+            <i class="fi fi-rr-apps"></i>
+            대시보드
+        </a>
+
+        <a href="/admin/admin_tutor_list" class="menu-item active">
+            <i class="fi fi-rr-users-alt"></i>
+            튜터 관리
+        </a>
+    </div>
+
+    <div class="admin-footer">
+        <a href="/user/logout" class="logout-btn">
+            <i class="fi fi-rr-sign-out-alt"></i>
+            로그아웃
+        </a>
+    </div>
+</div>
+
+<!-- 관리자 메인 콘텐츠 -->
+<div class="admin-main">
+    <div class="admin-header">
+        <h1 class="admin-title">튜터 신청 상세</h1>
+    </div>
+
+    <!-- 에러 메시지 -->
+    <div th:if="${param.error}" class="alert alert-danger">
+        처리 중 오류가 발생했습니다.
+    </div>
+
+    <!-- 신청 상세 정보 -->
+    <div class="admin-container">
+        <div class="detail-container">
+            <div class="detail-section">
+                <h2 class="section-title">신청자 정보</h2>
+                <div class="detail-content">
+                    <div class="profile-section">
+                        <div class="profile-image">
+                            <img th:if="${tutorInfo.tutor_image}"
+                                 th:src="@{'/uploads/' + ${tutorInfo.tutor_image}}"
+                                 alt="프로필 이미지">
+                            <div th:unless="${tutorInfo.tutor_image}" class="no-image">
+                                <i class="fi fi-rr-user"></i>
+                            </div>
+                        </div>
+                        <div class="profile-info">
+                            <div class="info-row">
+                                <div class="info-label">이름</div>
+                                <div class="info-value" th:text="${tutorInfo.user_name}">홍길동</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">닉네임</div>
+                                <div class="info-value" th:text="${tutorInfo.user_nickname}">길동이</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">신청일</div>
+                                <div class="info-value" th:text="${#dates.format(tutorInfo.apply_date, 'yyyy-MM-dd HH:mm')}">2023-04-01 14:30</div>
+                            </div>
+                            <div class="info-row" th:if="${tutorInfo.approve_date != null}">
+                                <div class="info-label">승인일</div>
+                                <div class="info-value" th:text="${#dates.format(tutorInfo.approve_date, 'yyyy-MM-dd HH:mm')}">2023-04-10 11:20</div>
+                            </div>
+                            <div class="info-row">
+                                <div class="info-label">상태</div>
+                                <div class="info-value">
+                                    <span th:class="'status-badge ' + ${tutorInfo.status}"
+                                          th:text="${tutorInfo.status == 'pending' ? '대기중' : (tutorInfo.status == 'approved' ? '승인' : (tutorInfo.status == 'reapply' ? '재신청' : '거부'))}">대기중
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h2 class="section-title">튜터 정보</h2>
+                <div class="detail-content">
+                    <div class="info-row">
+                        <div class="info-label">모국어</div>
+                        <div class="info-value" th:text="${tutorInfo.born_language}">한국어</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">가르칠 언어</div>
+                        <div class="info-value" th:text="${tutorInfo.teach_language}">영어</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">자격증</div>
+                        <div class="info-value">
+                            <div th:if="${not #lists.isEmpty(certificateFiles)}" class="certificate-files-list">
+                                <div th:each="file : ${certificateFiles}" class="file-item">
+                                    <a th:href="@{'/admin/view-pdf/' + ${file.file_key}}"
+                                       target="_blank" class="file-link">
+                                        <i class="fi fi-rr-document"></i>
+                                        <span th:text="${file.original_filename}">파일명.pdf</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <span th:if="${#lists.isEmpty(certificateFiles)}" class="no-file">파일 없음</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 승인/거부 버튼 (대기 중이거나 재신청인 경우 표시) -->
+            <div th:if="${tutorInfo.status == 'pending' || tutorInfo.status == 'reapply'}" class="action-buttons">
+                <form th:action="@{/admin/approve/{key}(key=${tutorInfo.tutor_key})}" method="post" class="action-form">
+                    <button type="submit" class="btn btn-approve">승인하기</button>
+                </form>
+
+                <!-- 거부 버튼을 클릭하면 거부 사유 폼이 표시되도록 -->
+                <button type="button" id="showRejectForm" class="btn btn-reject">거부하기</button>
+            </div>
+
+            <!-- 추가 언어 신청 시 승인/거부 버튼 (language_pending 상태일 때) -->
+            <div th:if="${tutorInfo.status == 'language_pending'}" class="action-buttons">
+                <form th:action="@{/admin/approve_language/{key}(key=${tutorInfo.tutor_key})}" method="post" class="action-form">
+                    <button type="submit" class="btn btn-approve">언어 추가 승인</button>
+                </form>
+
+                <!-- 거부 버튼을 클릭하면 거부 사유 폼이 표시되도록 (다른 ID 사용) -->
+                <button type="button" id="showLanguageRejectForm" class="btn btn-reject">거부하기</button>
+            </div>
+
+            <!-- 거부 사유 입력 폼 (초기에는 숨김) -->
+            <div id="rejectReasonForm" style="display: none;" class="reject-reason-form">
+                <h3>거부 사유 입력</h3>
+                <form th:action="@{/admin/reject/{key}(key=${tutorInfo.tutor_key})}" method="post">
+                    <div class="form-group">
+                        <label for="reject-reason">거부 사유</label>
+                        <textarea id="reject-reason" name="rejectReason" class="form-control" rows="4" required></textarea>
+                        <small>* 거부 사유는 신청자에게 전달됩니다.</small>
+                    </div>
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-reject">거부 확정</button>
+                        <button type="button" id="cancelReject" class="btn btn-cancel">취소</button>
+                    </div>
+                </form>
+            </div>
+
+            <a th:href="@{/admin/admin_tutor_list}" class="btn btn-back">목록으로 돌아가기</a>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/admin.js}"></script>
+</body>
+</html>

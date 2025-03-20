@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:classappend="${loginUserBean.login} ? 'logged-in' : ''">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - 튜터페이지</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/tutor.css}">
+
+    <!-- 로그인 상태 정보를 JavaScript 변수로 설정 -->
+    <script th:inline="javascript">
+        // 로그인 상태를 전역 변수로 설정
+        window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false;
+        // 튜터 상태를 전역 변수로 설정
+        window.tutorStatus = /*[[${tutorStatus}]]*/ 'not_applied';
+    </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="tutor-page-container">
+        <h1 class="tutor-page-title">튜터페이지</h1>
+
+        <!-- 메시지 표시 영역 -->
+        <div th:if="${param.applySuccess}" class="message success-message">
+            튜터 신청이 접수되었습니다. 관리자 승인 후 튜터로 활동하실 수 있습니다.
+        </div>
+
+        <div th:if="${param.alreadyApplied}" class="message info-message">
+            이미 튜터 신청 내역이 존재합니다.
+        </div>
+
+        <!-- 일반 사용자 - 신청하지 않은 상태 -->
+        <div th:if="${tutorStatus == 'not_applied'}" class="tutor-section">
+            <div class="tutor-info-card">
+                <div class="tutor-info-icon">
+                    <i class="fi fi-rr-users-alt"></i>
+                </div>
+                <div class="tutor-info-content">
+                    <h2>튜터로 활동하세요!</h2>
+                    <p>WORDLY에서 언어 튜터로 활동하고 다른 회원들에게 언어를 가르칠 수 있습니다.</p>
+                    <p>자격 심사 후 승인된 튜터는 커리큘럼 작성 및 수업 진행이 가능합니다.</p>
+                    <button class="btn btn-primary" onclick="location.href='/tutor/tutor_join'">튜터 신청하기</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 신청 중(재신청 포함) 상태 -->
+        <div th:if="${tutorStatus == 'pending' || tutorStatus == 'reapply'}" class="tutor-section">
+            <div class="tutor-status-card pending">
+                <div class="status-icon">
+                    <i class="fi fi-rr-hourglass-end"></i>
+                </div>
+                <div class="status-content">
+                    <h2>신청 검토 중</h2>
+                    <p>튜터 신청이 검토 중입니다. 검토 결과는 영업일 기준 3일 이내에 결정됩니다.</p>
+                    <div class="tutor-apply-info">
+                        <div class="info-item">
+                            <span class="info-label">신청일</span>
+                            <span class="info-value" th:text="${#dates.format(tutorInfo.apply_date, 'yyyy-MM-dd')}">2023-04-01</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">모국어</span>
+                            <span class="info-value" th:text="${tutorInfo.born_language}">한국어</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">가르칠 언어</span>
+                            <span class="info-value" th:text="${tutorInfo.teach_language}">영어</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 승인됨 상태 -->
+        <div th:if="${tutorStatus == 'approved'}" class="tutor-section">
+            <div class="tutor-status-card approved">
+                <div class="status-icon">
+                    <i class="fi fi-rr-badge-check"></i>
+                </div>
+                <div class="status-content">
+                    <h2>튜터 승인 완료</h2>
+                    <p>축하합니다! 튜터 신청이 승인되었습니다.</p>
+                </div>
+            </div>
+
+            <!-- 튜터 대시보드 -->
+            <div class="tutor-dashboard">
+                <h3>튜터 대시보드</h3>
+
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fi fi-rr-book-alt"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>수업 관리</h4>
+                            <p>수업을 개설하고 관리합니다.</p>
+                            <a href="#" class="card-link">수업 관리하기</a>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fi fi-rr-users"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>학생 관리</h4>
+                            <p>학생들의 학습 현황을 확인합니다.</p>
+                            <a href="#" class="card-link">학생 관리하기</a>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <div class="card-icon">
+                            <i class="fi fi-rr-document"></i>
+                        </div>
+                        <div class="card-content">
+                            <h4>교재 관리</h4>
+                            <p>학습 자료를 등록하고 관리합니다.</p>
+                            <a href="#" class="card-link">교재 관리하기</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 거부됨 상태 -->
+        <div th:if="${tutorStatus == 'rejected'}" class="tutor-section">
+            <div class="tutor-status-card rejected">
+                <div class="status-icon">
+                    <i class="fi fi-rr-cross-circle"></i>
+                </div>
+                <div class="status-content">
+                    <h2>신청이 거부되었습니다</h2>
+                    <p>튜터 신청이 승인되지 않았습니다. 자격 요건을 재확인하시고 다시 신청해주세요.</p>
+                    <p>거부 사유: <span th:text="${tutorInfo.getReject_reason()}">자격증 미비, 언어 능력 증빙 부족 등</span></p>
+                    <button class="btn btn-primary" onclick="location.href='/tutor/tutor_join'">다시 신청하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/tutor.js}"></script>
+</body>
+</html>

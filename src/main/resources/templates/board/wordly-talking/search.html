@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - 검색 결과</title>
+    <!-- CSRF 토큰 (Spring Security) -->
+    <meta name="_csrf" th:content="${_csrf != null} ? ${_csrf.token} : ''"/>
+    <meta name="_csrf_header" th:content="${_csrf != null} ? ${_csrf.headerName} : ''"/>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://webfontworld.github.io/kopus/KoPubWorldDotum.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/board/board-common.css}">
+    <link rel="stylesheet" th:href="@{/css/board/wordly-talking.css}">
+    <link rel="stylesheet" th:href="@{/css/board/pagination.css}">
+    <style>
+        .search-info {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .search-keyword {
+            font-weight: bold;
+            color: #FF902F;
+        }
+
+        .search-count {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .no-results {
+            padding: 50px 0;
+            text-align: center;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+<!-- Main Content -->
+<div class="main-content">
+    <!-- 헤더 -->
+    <header class="board-header">
+        <div class="logo">WORDLY</div>
+        <div class="user-actions">
+            <div class="search-box">
+                <!-- 검색어 입력 필드 -->
+                <input type="text" placeholder="키워드, # 태그 검색" th:value="${searchQuery}">
+                <!-- 히든 필드로 현재 카테고리 정보 유지 -->
+                <input type="hidden" id="searchCategory" value="" th:value="${category}">
+                <button class="search-btn"><i class="fi fi-rr-search"></i></button>
+            </div>
+            <div class="auth-buttons">
+                <!-- 로그인 상태에 따라 변경 -->
+                <a th:if="${loginUserBean.login == true}" th:href="@{/user/modify}" class="login-btn" th:text="${loginUserBean.user_nickname} + ' 님'">홍길동 님</a>
+                <a th:unless="${loginUserBean.login == true}" th:href="@{/user/login}" class="login-btn">로그인</a>
+                <a href="/main" class="page-btn">학습 페이지로</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="board-divider"></div>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <div class="board-container">
+        <!-- 좌측 메뉴 -->
+        <div class="board-sidebar">
+            <h2 class="section-title">COMMUNITY</h2>
+
+            <div class="board-menu">
+                <div class="menu-category">
+                    <!-- 메인 메뉴 항목 -->
+                    <a th:href="@{/board/wordly-talking}" class="menu-item" th:classappend="${currentBoardType == 'wordly-talking' || currentBoardType == null} ? 'active' : ''">워들리 토킹</a>
+                    <a th:href="@{/board/connect}" class="menu-item" th:classappend="${currentBoardType == 'connect'} ? 'active' : ''">커넥트</a>
+                </div>
+
+                <!-- 서브메뉴 카테고리 - 이 부분이 중요합니다 -->
+                <div class="menu-subcategory">
+                    <a th:href="@{/board/wordly-talking/free}" class="submenu-item" th:classappend="${category == 'free'} ? 'active' : ''">자유 게시판</a>
+                    <a th:href="@{/board/wordly-talking/knowhow}" class="submenu-item" th:classappend="${category == 'knowhow'} ? 'active' : ''">노하우 전수</a>
+                    <a th:href="@{/board/wordly-talking/tutor}" class="submenu-item" th:classappend="${category == 'tutor'} ? 'active' : ''">튜터 모집</a>
+                    <a th:href="@{/board/wordly-talking/student}" class="submenu-item" th:classappend="${category == 'student'} ? 'active' : ''">학생 모집</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 검색 결과 영역 -->
+        <div class="board-content">
+            <!-- 검색 정보 -->
+            <div class="search-info">
+                <h2>검색 결과</h2>
+                <p>
+                    "<span class="search-keyword" th:text="${searchQuery}">검색어</span>" 검색 결과
+                </p>
+                <div class="search-count">
+                    총 <span th:text="${pageBean != null ? pageBean.totalContent : 0}">0</span>개의 게시글이 검색되었습니다.
+                </div>
+            </div>
+
+            <!-- 검색 결과 목록 -->
+            <div class="post-list">
+                <!-- 검색 결과가 없는 경우 -->
+                <div th:if="${#lists.isEmpty(boardList)}" class="no-results">
+                    <p>검색 결과가 없습니다.</p>
+                </div>
+
+                <!-- 게시글 반복 -->
+                <div th:each="board : ${boardList}" class="post-item">
+                    <div class="post-info">
+                        <a th:href="@{|/board/wordly-talking/detail/${board.board_key}|}" class="post-category">
+                            <i class="fi fi-rr-comment-alt"></i> 커뮤니티 · <span th:text="${board.board_info_name}">자유 게시판</span>
+                        </a>
+                        <h3 class="post-title">
+                            <a th:href="@{|/board/wordly-talking/detail/${board.board_key}|}" th:text="${board.board_title}">게시글 제목</a>
+                        </h3>
+                        <p class="post-content" th:text="${board.board_text}">
+                            게시글 내용
+                        </p>
+                        <div class="post-actions">
+                            <span class="like-count" th:data-board-key="${board.board_key}">
+                                <i th:class="${board.user_like ? 'fi fi-sr-heart' : 'fi fi-rr-heart'}"></i>
+                                <span th:text="${board.like_count}">0</span>
+                            </span>
+                            <span class="comment-count">
+                                <i class="fi fi-rr-comment"></i>
+                                <span th:text="${board.comment_count}">0</span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="post-timestamp" th:data-date="${board.created_date}" th:text="${#strings.substring(board.created_date, 0, 10)}">3초전</div>
+                </div>
+            </div>
+
+            <!-- 페이징 처리 -->
+            <div class="pagination-container" th:if="${pageBean != null && pageBean.totalPage > 0}">
+                <ul class="pagination">
+                    <!-- 이전 페이지 그룹으로 이동 -->
+                    <li class="page-item" th:classappend="${!pageBean.prevPageGroup} ? 'disabled' : ''">
+                        <a class="page-link prev-group"
+                           th:href="@{|/board/wordly-talking/search?q=${searchQuery}&category=${category}&page=${pageBean.pageGroupStart - 1}|}"
+                           th:if="${pageBean.prevPageGroup}">
+                            <i class="fi fi-rr-angle-double-left"></i>
+                        </a>
+                        <span class="page-link prev-group" th:unless="${pageBean.prevPageGroup}">
+                            <i class="fi fi-rr-angle-double-left"></i>
+                        </span>
+                    </li>
+
+                    <!-- 이전 페이지로 이동 -->
+                    <li class="page-item" th:classappend="${pageBean.currentPage <= 1} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{|/board/wordly-talking/search?q=${searchQuery}&category=${category}&page=${pageBean.currentPage - 1}|}"
+                           th:if="${pageBean.currentPage > 1}">
+                            <i class="fi fi-rr-angle-left"></i>
+                        </a>
+                        <span class="page-link" th:unless="${pageBean.currentPage > 1}">
+                            <i class="fi fi-rr-angle-left"></i>
+                        </span>
+                    </li>
+
+                    <!-- 페이지 번호 -->
+                    <li class="page-item" th:each="page : ${#numbers.sequence(pageBean.pageGroupStart, pageBean.pageGroupEnd)}"
+                        th:classappend="${page == pageBean.currentPage} ? 'active' : ''">
+                        <a class="page-link"
+                           th:href="@{|/board/wordly-talking/search?q=${searchQuery}&category=${category}&page=${page}|}"
+                           th:text="${page}">1</a>
+                    </li>
+
+                    <!-- 다음 페이지로 이동 -->
+                    <li class="page-item" th:classappend="${pageBean.currentPage >= pageBean.totalPage} ? 'disabled' : ''">
+                        <a class="page-link"
+                           th:href="@{|/board/wordly-talking/search?q=${searchQuery}&category=${category}&page=${pageBean.currentPage + 1}|}"
+                           th:if="${pageBean.currentPage < pageBean.totalPage}">
+                            <i class="fi fi-rr-angle-right"></i>
+                        </a>
+                        <span class="page-link" th:unless="${pageBean.currentPage < pageBean.totalPage}">
+                            <i class="fi fi-rr-angle-right"></i>
+                        </span>
+                    </li>
+
+                    <!-- 다음 페이지 그룹으로 이동 -->
+                    <li class="page-item" th:classappend="${!pageBean.nextPageGroup} ? 'disabled' : ''">
+                        <a class="page-link next-group"
+                           th:href="@{|/board/wordly-talking/search?q=${searchQuery}&category=${category}&page=${pageBean.pageGroupEnd + 1}|}"
+                           th:if="${pageBean.nextPageGroup}">
+                            <i class="fi fi-rr-angle-double-right"></i>
+                        </a>
+                        <span class="page-link next-group" th:unless="${pageBean.nextPageGroup}">
+                            <i class="fi fi-rr-angle-double-right"></i>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 뒤로 가기 버튼 -->
+            <div class="write-btn-container" style="justify-content: space-between;">
+                <a th:href="@{|/board/wordly-talking/${category}|}" class="action-btn">목록으로 돌아가기</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/board/wordly-talking.js}"></script>
+</body>
+</html>

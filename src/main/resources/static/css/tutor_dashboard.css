@@ -1,0 +1,344 @@
+/*
+ * tutor_dashboard.css - 튜터 대시보드 스타일
+ * 관련 파일: tutor_dashboard.html, tutor_dashboard.js
+ */
+
+.dashboard-container {
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 28px;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+}
+
+.dashboard-title::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #D1DE74;
+}
+
+/* 메시지 스타일 */
+.message {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.success-message {
+    background-color: rgba(46, 204, 64, 0.2);
+    color: #2ECC40;
+}
+
+.error-message {
+    background-color: rgba(255, 65, 54, 0.2);
+    color: #FF4136;
+}
+
+/* 탭 스타일 */
+.dashboard-tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    margin-bottom: 30px;
+}
+
+.tabs-container {
+    display: flex;
+}
+
+.tab-btn {
+    padding: 15px 25px;
+    margin-right: 10px;
+    background: none;
+    border: none;
+    font-family: 'Phudu', cursive;
+    font-size: 16px;
+    color: #614D42;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    color: #E0912F;
+}
+
+.tab-btn.active {
+    color: #E0912F;
+}
+
+.tab-btn.active::after {
+    background-color: #E0912F;
+}
+
+/* 액션 버튼 스타일 */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-secondary {
+    background-color: #614D42;
+    color: white;
+    padding: 10px 15px;
+    font-size: 14px;
+}
+
+.btn-secondary:hover {
+    background-color: #503d34;
+    text-decoration: none;
+    color: white;
+}
+
+/* 그룹 없음 컨테이너 */
+.no-group-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 0;
+    text-align: center;
+}
+
+.no-group-message {
+    max-width: 500px;
+}
+
+.no-group-message i {
+    font-size: 60px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.no-group-message h2 {
+    font-family: 'Phudu', cursive;
+    font-size: 24px;
+    color: #614D42;
+    margin-bottom: 15px;
+}
+
+.no-group-message p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+/* 그룹 목록 스타일 */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title {
+    font-family: 'Phudu', cursive;
+    font-size: 20px;
+    color: #614D42;
+}
+
+.btn-create {
+    background-color: #D1DE74;
+    color: #333;
+    padding: 10px 15px;
+    font-size: 14px;
+}
+
+.group-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.group-card {
+    background-color: #F5EBE2;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.group-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.group-card-header {
+    background-color: #614D42;
+    padding: 15px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.group-name {
+    font-family: 'Phudu', cursive;
+    font-size: 18px;
+    margin: 0;
+}
+
+.group-language {
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+.group-card-body {
+    padding: 15px;
+}
+
+.group-info {
+    margin-bottom: 15px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.info-label {
+    color: #666;
+}
+
+.info-value {
+    font-weight: bold;
+    color: #614D42;
+}
+
+.badge {
+    display: inline-block;
+    background-color: #E0912F;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+}
+
+.group-card-footer {
+    padding: 0 15px 15px 15px;
+}
+
+.btn-manage {
+    display: block;
+    width: 100%;
+    background-color: #614D42;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    text-decoration: none;
+}
+
+.btn-manage:hover {
+    background-color: #503d34;
+    text-decoration: none;
+}
+
+/* 그룹 활동 탭 스타일 */
+.activity-container {
+    padding: 20px;
+    background-color: #F5EBE2;
+    border-radius: 8px;
+}
+
+.activity-header {
+    margin-bottom: 20px;
+}
+
+.coming-soon {
+    color: #E0912F;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.group-selector {
+    margin-bottom: 30px;
+}
+
+.group-selector label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #614D42;
+}
+
+.activity-placeholder {
+    padding: 50px 0;
+    text-align: center;
+}
+
+.placeholder-icon {
+    font-size: 60px;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+.activity-placeholder h3 {
+    font-family: 'Phudu', cursive;
+    font-size: 20px;
+    color: #614D42;
+    margin-bottom: 15px;
+}
+
+.activity-placeholder p {
+    color: #666;
+    margin-bottom: 25px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-start-class {
+    padding: 12px 25px;
+}
+
+.btn-start-class[disabled] {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .group-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-tabs {
+        flex-direction: column;
+        border-bottom: none;
+    }
+
+    .tab-btn {
+        margin-right: 0;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+}

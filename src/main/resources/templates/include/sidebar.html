@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sidebar</title>
+</head>
+
+<body>
+<!-- 사이드바 조각 정의 -->
+<div th:fragment="sidebar">
+    <!-- 왼쪽 사이드바 -->
+    <div class="sidebar left-sidebar">
+        <!-- WORDLY 로고 (홈 버튼) -->
+        <div class="sidebar-logo" th:onclick="'location.href=\'' + @{/main} + '\''">WORDLY</div>
+
+        <div class="divider"></div>
+
+        <!-- 비로그인 상태일 때 로그인/회원가입 버튼 -->
+        <div th:if="${!loginUserBean.login}" class="nav-item" th:onclick="'location.href=\'' + @{/user/login} + '\''">
+            <i class="fi fi-rr-user-add"></i>
+            <span>로그인/가입</span>
+        </div>
+
+        <!-- 로그인 상태일 때 사용자 프로필 -->
+        <div th:if="${loginUserBean.login}" class="nav-item user-profile">
+            <div class="profile-circle">
+                <!-- 프로필 이미지가 있으면 이미지 표시, 없으면 이니셜 표시 -->
+                <img th:if="${loginUserBean.user_image != null}"
+                     th:src="${loginUserBean.user_image.startsWith('images/') ? '/' + loginUserBean.user_image : '/uploads/' + loginUserBean.user_image}"
+                     alt="프로필">
+                <span th:unless="${loginUserBean.user_image != null}" th:text="${#strings.substring(loginUserBean.user_nickname,0,1)}">U</span>
+            </div>
+
+            <!-- 드롭다운 메뉴 - 아이콘 추가 -->
+            <div class="dropdown-menu">
+                <div class="dropdown-item" th:onclick="'location.href=\'' + @{/user/mypage} + '\''">
+                    <i class="fi fi-rr-user"></i>
+                    마이페이지
+                </div>
+                <div class="dropdown-item" th:onclick="'location.href=\'' + @{/tutor/tutor_page} + '\''">
+                    <i class="fi fi-rr-users-alt"></i>
+                    튜터전환
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item" id="logoutButton">
+                    <i class="fi fi-rr-sign-out-alt"></i>
+                    로그아웃
+                </div>
+            </div>
+        </div>
+
+        <div class="menu-icon-container">
+            <div class="menu-icon">☰</div>
+            <!-- 호버링으로 나타나는 서브메뉴 -->
+            <div class="sub-menu">
+                <div class="sub-menu-title">게시판</div>
+                <ul class="sub-menu-list">
+                    <li><a href="/board/wordly-talking">워들리 토킹</a></li>
+                    <li><a href="/board/connect">커넥션</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- 메뉴 아이템들 - 마이페이지와 로그아웃 버튼은 제거 -->
+        <div class="nav-item" th:classappend="${currentMenu == 'home'} ? 'active' : ''"
+             th:onclick="'location.href=\'' + @{/main} + '\''">
+            <i class="fi fi-rr-book-alt"></i>
+            <span>홈</span>
+        </div>
+        <div class="nav-item" th:classappend="${currentMenu == 'learning'} ? 'active' : ''"
+             th:onclick="${loginUserBean.login} ? 'location.href=\'' + @{/learn/learn_page} + '\'' : 'location.href=\'' + @{/user/login} + '\''">
+            <i class="fi fi-rr-sparkles"></i>
+            <span>학습</span>
+        </div>
+        <!--<div class="nav-item" th:classappend="${currentMenu == 'tutor'} ? 'active' : ''"
+             th:onclick="${loginUserBean.login} ? 'location.href=\'' + @{/tutor} + '\'' : 'location.href=\'' + @{/user/login} + '\''">
+            <i class="fi fi-rr-users-alt"></i>
+            <span>튜터</span>
+        </div>-->
+        <div class="nav-item" th:classappend="${currentMenu == 'payment'} ? 'active' : ''"
+             th:onclick="${loginUserBean.login} ? 'location.href=\'' + @{/payment} + '\'' : 'location.href=\'' + @{/user/login} + '\''">
+            <i class="fi fi-rr-credit-card"></i>
+            <span>결제</span>
+        </div>
+    </div>
+
+    <!-- 오른쪽 사이드바 -->
+    <div class="sidebar right-sidebar">
+        <div class="panel-header">
+            <span class="panel-header-text">MY LEARNING</span>
+            <i class="fi fi-rr-pencil"></i>
+        </div>
+
+        <!-- 이벤트 카드 - 개선된 디자인 -->
+        <div class="event-card">
+            <div class="card-header">
+                <span><i class="fi fi-br-check"></i> EVENTS</span>
+                <button class="close-button">
+                    <i class="fi fi-rr-circle-x"></i>
+                </button>
+            </div>
+            <div class="card-content">
+                <div class="carousel-container">
+                    <!-- 캐러셀 내용 -->
+                    <div class="carousel-slides">
+                        <!-- 슬라이드들이 여기에 들어감 -->
+                    </div>
+
+                    <!-- 좌우 화살표 -->
+                    <button class="carousel-arrow carousel-arrow-left">
+                        <i class="fi fi-sr-angle-left"></i>
+                    </button>
+                    <button class="carousel-arrow carousel-arrow-right">
+                        <i class="fi fi-sr-angle-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 학습 상태 카드 - 로그인한 사용자에게만 표시 -->
+        <div th:if="${loginUserBean.login}" class="status-card">
+            <div class="card-header">
+                <span><i class="fi fi-br-check"></i> LEARNING STATUS</span>
+                <button class="close-button">
+                    <i class="fi fi-rr-circle-x"></i>
+                </button>
+            </div>
+            <div class="card-content">
+                <div class="study-info">
+                    <span>Study Language : English</span>
+                </div>
+                <div>
+                    <div class="progress-status">PROGRESS STATUS (25/21)</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="level-text">LEVEL: CHICK</div>
+                </div>
+                <button class="continue-btn">CONTINUE</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

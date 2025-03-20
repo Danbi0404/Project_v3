@@ -1,0 +1,90 @@
+/*
+ * user_join.css - 회원가입 페이지 스타일
+ * 관련 파일: join.html, user_join.js
+ */
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #E0C5B4;
+    font-family: 'Roboto', sans-serif;
+    padding: 20px;
+}
+
+.join-container {
+    background-color: #F5EBE2;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+}
+
+.join-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 24px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.btn {
+    display: block;
+    width: 100%;
+    background-color: #D1DE74;
+    color: #333;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Phudu', cursive;
+    text-transform: uppercase;
+    margin-top: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background-color: #bcc863;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #614D42;
+    text-decoration: none;
+    font-family: 'Phudu', cursive;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* 주소 입력 폼 스타일 */
+.address-input-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.address-search-btn {
+    background-color: #614D42;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+#join_postcode {
+    width: 150px;
+}
+
+#join_address, #join_detailAddress, #join_extraAddress {
+    margin-bottom: 10px;
+}

@@ -1,0 +1,213 @@
+/*
+ * mypage.css - 마이페이지 스타일
+ * 관련 파일: mypage.html, mypage.js
+ */
+
+.mypage-container {
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.mypage-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 28px;
+    margin-bottom: 30px;
+    position: relative;
+    display: inline-block;
+}
+
+.mypage-title::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #D1DE74;
+}
+
+/* 로그인 회원 스타일 */
+.mypage-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #F5EBE2;
+    border-radius: 8px;
+}
+
+.section-title {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.user-info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.user-info-item {
+    display: flex;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(97, 77, 66, 0.1);
+}
+
+.info-label {
+    width: 120px;
+    font-weight: bold;
+    color: #614D42;
+}
+
+.info-value {
+    flex: 1;
+}
+
+.button-container {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.learning-stats {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.stat-item {
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+    min-width: 120px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: #E0912F;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: #614D42;
+}
+
+/* 구독 정보 스타일 */
+.subscription-info {
+    margin-top: 10px;
+}
+
+.no-subscription {
+    text-align: center;
+    padding: 30px 0;
+    color: #666;
+}
+
+.no-subscription p {
+    margin-bottom: 20px;
+}
+
+/* 비로그인 회원 스타일 */
+.login-required {
+    text-align: center;
+    padding: 60px 0;
+}
+
+.login-message {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #F5EBE2;
+    border-radius: 8px;
+}
+
+.login-message i {
+    font-size: 48px;
+    color: #614D42;
+    margin-bottom: 20px;
+}
+
+.login-message h2 {
+    font-family: 'Phudu', cursive;
+    color: #614D42;
+    margin-bottom: 15px;
+}
+
+.login-message p {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.login-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn-login {
+    background-color: #614D42;
+    color: white;
+}
+
+.btn {
+    background-color: #D1DE74;
+    color: #333;
+}
+
+/* 프로필 이미지 스타일 */
+.user-profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px auto;
+    border: 3px solid #D1DE74;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+}
+
+.user-profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.default-profile-icon {
+    font-size: 48px;
+    color: #ccc;
+}
+
+/* 모바일 반응형 */
+@media (max-width: 768px) {
+    .learning-stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .stat-item {
+        width: 100%;
+    }
+
+    .login-buttons {
+        flex-direction: column;
+    }
+
+    .user-info-item {
+        flex-direction: column;
+    }
+
+    .info-label {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}

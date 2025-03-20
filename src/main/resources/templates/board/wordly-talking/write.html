@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - 게시글 작성</title>
+    <!-- CSRF 토큰 (Spring Security) -->
+    <meta name="_csrf" th:content="${_csrf != null} ? ${_csrf.token} : ''"/>
+    <meta name="_csrf_header" th:content="${_csrf != null} ? ${_csrf.headerName} : ''"/>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://webfontworld.github.io/kopus/KoPubWorldDotum.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/board/board-common.css}">
+    <link rel="stylesheet" th:href="@{/css/board/wordly-talking.css}">
+    <style>
+        /* 글 작성 폼 스타일 */
+        .write-form {
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e5e5e5;
+            border-radius: 5px;
+            font-family: 'KoPubWorldDotum', sans-serif;
+            font-size: 14px;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e5e5e5;
+            border-radius: 5px;
+            font-family: 'KoPubWorldDotum', sans-serif;
+            font-size: 14px;
+            background-color: #fff;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 12px;
+            border: 1px solid #e5e5e5;
+            border-radius: 5px;
+            font-family: 'KoPubWorldDotum', sans-serif;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .cancel-btn {
+            padding: 10px 20px;
+            background-color: #f5f5f5;
+            color: #666;
+            border: none;
+            border-radius: 5px;
+            font-family: 'KoPubWorldDotum', sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .cancel-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .submit-btn {
+            padding: 10px 20px;
+            background-color: #D1DE74;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            font-family: 'KoPubWorldDotum', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #c1ce64;
+        }
+
+        /* 모바일 최적화 */
+        @media (max-width: 768px) {
+            .form-buttons {
+                flex-direction: column-reverse;
+                gap: 10px;
+            }
+
+            .cancel-btn, .submit-btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Main Content -->
+<div class="main-content">
+    <!-- 헤더 -->
+    <header class="board-header">
+        <div class="logo">WORDLY</div>
+        <div class="user-actions">
+            <div class="search-box">
+                <input type="text" placeholder="키워드, # 태그 검색">
+                <button class="search-btn"><i class="fi fi-rr-search"></i></button>
+            </div>
+            <div class="auth-buttons">
+                <!-- 로그인 상태에 따라 변경 -->
+                <a th:if="${loginUserBean.login == true}" th:href="@{/user/modify}" class="login-btn" th:text="${loginUserBean.user_nickname} + ' 님'">홍길동 님</a>
+                <a th:unless="${loginUserBean.login == true}" th:href="@{/user/login}" class="login-btn">로그인</a>
+                <a href="/main" class="page-btn">학습 페이지로</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="board-divider"></div>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <div class="board-container">
+        <!-- 좌측 메뉴 -->
+        <div class="board-sidebar">
+            <h2 class="section-title">COMMUNITY</h2>
+
+            <div class="board-menu">
+                <div class="menu-category">
+                    <a th:href="@{/board/wordly-talking}" class="menu-item active">워들리 토킹</a>
+                    <a th:href="@{/board/connect}" class="menu-item">커넥트</a>
+                </div>
+
+                <div class="menu-subcategory">
+                    <a th:href="@{/board/wordly-talking/free}" class="submenu-item" th:classappend="${category == 'free'} ? 'active' : ''">자유 게시판</a>
+                    <a th:href="@{/board/wordly-talking/knowhow}" class="submenu-item" th:classappend="${category == 'knowhow'} ? 'active' : ''">노하우 전수</a>
+                    <a th:href="@{/board/wordly-talking/tutor}" class="submenu-item" th:classappend="${category == 'tutor'} ? 'active' : ''">튜터 모집</a>
+                    <a th:href="@{/board/wordly-talking/student}" class="submenu-item" th:classappend="${category == 'student'} ? 'active' : ''">학생 모집</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 게시글 작성 영역 -->
+        <div class="board-content">
+            <h2>게시글 작성</h2>
+
+            <form class="write-form" th:action="@{/board/wordly-talking/write_pro}" method="post" th:object="${boardBean}">
+                <div class="form-group">
+                    <label for="board_info_key" class="form-label">게시판</label>
+                    <select id="board_info_key" name="board_info_key" class="form-select" th:field="*{board_info_key}" onchange="updateContent()">
+                        <option th:each="boardInfo : ${boardInfoList}"
+                                th:if="${boardInfo.board_info_type.startsWith('wordly-')}"
+                                th:value="${boardInfo.board_info_key}"
+                                th:text="${boardInfo.board_info_name}"
+                                th:selected="${category != null && boardInfo.board_info_type == 'wordly-' + category}">
+                            자유 게시판
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="board_title" class="form-label">제목</label>
+                    <input type="text" id="board_title" name="board_title" class="form-control" placeholder="제목을 입력하세요" th:field="*{board_title}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="board_text" class="form-label">내용</label>
+                    <textarea id="board_text" name="board_text" class="form-textarea" placeholder="내용을 입력하세요" th:field="*{board_text}" required></textarea>
+                </div>
+
+                <!-- 학생 모집 게시글 작성일 경우 활성화 -->
+                <div id="specificContent" style="display:none;">
+                    <div id="noGroupsMessage" style="display:none;">그룹이 없습니다. 그룹을 생성해 주세요(작성완료 버튼 비활성화됨)</div>
+                    <div th:if="${groupList != null}">
+                        <label for="additionalContentInput">그룹 선택 :</label>
+                        <select id="additionalContentInput" name="selectedGroup" class="form-select">
+                            <option th:each="group : ${groupList}"
+                                    th:value="${group.group_key}"
+                                    th:text="${'[그룹명 : ' + group.room_name + '] [가르치는 언어 : ' + group.teach_language + '] [생성일 : ' + #dates.format(group.created_date, 'yyyy-MM-dd') + ']'}"
+                                    th:attr="disabled=${group.getGroup_board_key() != null ? 'disabled' : null}"
+                                    ><!-- attr -> 이미 작성글이 있는 그룹은 선택할 수 없도록 disable -->
+                            </option><!-- #dates.format 형태로 날짜 가져와야 yyyy-mm-dd 확정적으로 표시할 수 있음 -->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-buttons">
+                    <a th:href="@{|/board/wordly-talking/${category}|}" class="cancel-btn">취소</a>
+                    <button type="submit" class="submit-btn" id="submitButton">작성완료</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/board/wordly-talking.js}"></script>
+
+<!-- 학생 모집 게시글 유형을 선택할 경우, 그룹 선택창 표시 -->
+<script>
+    function updateContent() {
+        var select = document.getElementById("board_info_key");
+        var selectedValue = select.value;
+        var submitButton = document.getElementById("submitButton");
+        var noGroupsMessage = document.getElementById("noGroupsMessage");
+
+        if (selectedValue === "4") { // 그룹이 필수인 옵션 선택 시
+            document.getElementById("specificContent").style.display = "block";
+            // 그룹 선택 옵션이 있는지 확인
+            if (document.querySelector("#additionalContentInput option")) {
+                submitButton.disabled = false;  // 그룹이 있으면 버튼 활성화
+                noGroupsMessage.style.display = "none"; // 메시지 숨기기
+            } else {
+                submitButton.disabled = true; // 그룹이 없으면 버튼 비활성화
+                noGroupsMessage.style.display = "block"; // 메시지 표시
+            }
+        } else {
+            document.getElementById("specificContent").style.display = "none";
+            submitButton.disabled = false; // 다른 옵션은 버튼 활성화
+            noGroupsMessage.style.display = "none"; // 메시지 숨기기
+        }
+    }
+</script>
+</body>
+</html>

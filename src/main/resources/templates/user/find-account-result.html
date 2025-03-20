@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>아이디 찾기 결과</title>
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <!-- Icons -->
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+  <!-- CSS 파일 -->
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{/css/find-account.css}">
+</head>
+<body>
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- 아이디 찾기 결과 컨테이너 -->
+<div class="find-account-container">
+  <div class="logo">WORDLY</div>
+
+  <div class="result-container">
+    <div class="result-title">아이디 찾기 결과</div>
+    <div class="result-content">
+      <p>입력하신 정보로 아래의 계정을 찾았습니다.</p>
+      <p class="found-id-info">아이디: <span th:text="${foundUser.user_id}" class="found-id">user123</span></p>
+      <p class="result-date">가입일: <span th:text="${foundUser.create_time}">2023-01-01</span></p>
+    </div>
+    <div class="result-actions">
+      <button class="btn btn-secondary" onclick="location.href='/user/login'">로그인</button>
+      <button class="btn btn-outline" onclick="location.href='/user/find-account?tab=password'">비밀번호 찾기</button>
+    </div>
+  </div>
+
+  <a th:href="@{/user/login}" class="back-link">로그인 페이지로 돌아가기</a>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+</body>
+</html>

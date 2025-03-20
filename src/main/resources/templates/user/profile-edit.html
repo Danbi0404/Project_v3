@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:classappend="${loginUserBean.login} ? 'logged-in' : ''">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - 프로필 수정</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/profile-edit.css}">
+
+    <!-- 로그인 상태 정보를 JavaScript 변수로 설정 -->
+    <script th:inline="javascript">
+        // 로그인 상태를 전역 변수로 설정
+        window.isLoggedIn = /*[[${loginUserBean.login}]]*/ false; //기본값 false, login값 있으면 우선 적용
+    </script>
+</head>
+<body class="logged-in">
+<!-- 사이드바 Include -->
+<div th:replace="~{include/sidebar :: sidebar}"></div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <div class="profile-edit-container">
+        <h1 class="profile-title">프로필 수정</h1>
+
+        <!-- 로그인 상태에 따라 다른 내용 표시 -->
+        <div th:if="${loginUserBean.login}" class="profile-content">
+            <!-- 비밀번호 확인 섹션 (처음에 표시) -->
+            <div id="password-confirm-section" class="profile-section">
+                <h2 class="section-title">본인 확인</h2>
+                <p class="section-desc">보안을 위해 비밀번호를 입력해주세요.</p>
+
+                <form id="password-confirm-form">
+                    <div class="form-group">
+                        <label for="current-password">현재 비밀번호</label>
+                        <input type="password" id="current-password" class="form-control" required>
+                    </div>
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-primary">확인</button>
+                        <button type="button" class="btn btn-cancel" onclick="location.href='/user/mypage'">취소</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 프로필 수정 섹션 (비밀번호 확인 후 표시) -->
+            <div id="profile-edit-section" class="profile-section" style="display: none;">
+                <h2 class="section-title">프로필 정보 수정</h2>
+
+                <form id="profile-edit-form" th:action="@{/user/profile/update}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="user-id">이메일</label>
+                        <input type="email" id="user-id" class="form-control" th:value="${loginUserBean.user_id}" readonly>
+                        <small class="form-text">이메일은 변경할 수 없습니다.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user-name">이름</label>
+                        <input type="text" id="user-name" name="user_name" class="form-control" th:value="${loginUserBean.user_name}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="user-nickname">닉네임</label>
+                        <input type="text" id="user-nickname" name="user_nickname" class="form-control" th:value="${loginUserBean.user_nickname}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile-image">프로필 이미지</label>
+                        <div class="file-upload-container">
+                            <div class="image-preview-container">
+                                <div id="profile-image-preview" class="image-preview">
+                                    <!-- 이미지 경로가 images/로 시작하면 정적 리소스, 그렇지 않으면 업로드된 파일 -->
+                                    <img th:if="${loginUserBean.user_image != null}"
+                                         th:src="${loginUserBean.user_image.startsWith('images/') ? '/' + loginUserBean.user_image : '/uploads/' + loginUserBean.user_image}"
+                                         alt="프로필 이미지">
+                                    <i th:unless="${loginUserBean.user_image != null}" class="fi fi-rr-user"></i>
+                                </div>
+                            </div>
+                            <div class="file-input-container">
+                                <input type="file" id="profile-image" name="profileImage" class="form-control" accept="image/*" onchange="previewImage(this, 'profile-image-preview')">
+                                <small class="file-format-info">* JPG, PNG, GIF 이미지 (최대 2MB)</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-primary">저장</button>
+                        <button type="button" class="btn btn-secondary" id="change-password-btn">비밀번호 변경</button>
+                        <button type="button" class="btn btn-cancel" onclick="location.href='/user/mypage'">취소</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 비밀번호 변경 섹션 (비밀번호 변경 버튼 클릭 시 표시) -->
+            <div id="password-change-section" class="profile-section" style="display: none;">
+                <h2 class="section-title">비밀번호 변경</h2>
+
+                <form id="password-change-form" th:action="@{/user/profile/change-password}" method="post">
+                    <div class="form-group">
+                        <label for="current-pw">현재 비밀번호</label>
+                        <input type="password" id="current-pw" name="user_pw" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-pw">새 비밀번호</label>
+                        <input type="password" id="new-pw" name="user_new_pw" class="form-control" required>
+                        <small class="form-text">8~12자의 영문, 숫자만 사용 가능합니다.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-pw">새 비밀번호 확인</label>
+                        <input type="password" id="confirm-pw" name="user_check_pw" class="form-control" required>
+                    </div>
+
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-primary">비밀번호 변경</button>
+                        <button type="button" class="btn btn-cancel" id="cancel-pw-change">취소</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 비로그인 회원에게 보여줄 내용 -->
+        <div th:unless="${loginUserBean.login}" class="login-required">
+            <div class="login-message">
+                <i class="fi fi-rr-user-lock"></i>
+                <h2>로그인이 필요합니다</h2>
+                <p>프로필 수정을 이용하려면 로그인이 필요합니다.</p>
+                <p>회원이 아니시라면 회원가입 후 이용해주세요.</p>
+
+                <div class="login-buttons">
+                    <button class="btn btn-login" onclick="location.href='/user/login'">로그인</button>
+                    <button class="btn" onclick="location.href='/user/join'">회원가입</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/sidebar.js}"></script>
+<script th:src="@{/js/profile-edit.js}"></script>
+<script>
+    // 이미지 미리보기 함수
+    function previewImage(input, previewId) {
+        const preview = document.getElementById(previewId);
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.innerHTML = `<img src="${e.target.result}" alt="Profile Preview">`;
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            preview.innerHTML = '<i class="fi fi-rr-user"></i>';
+        }
+    }
+</script>
+</body>
+</html>

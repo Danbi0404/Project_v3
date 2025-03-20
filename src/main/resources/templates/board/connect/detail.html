@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDLY - 게시글 상세</title>
+    <!-- CSRF 토큰 (Spring Security) -->
+    <meta name="_csrf" th:content="${_csrf != null} ? ${_csrf.token} : ''"/>
+    <meta name="_csrf_header" th:content="${_csrf != null} ? ${_csrf.headerName} : ''"/>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Phudu:wght@300;400;500&family=Lilita+One&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://webfontworld.github.io/kopus/KoPubWorldDotum.css" rel="stylesheet">
+    <!-- Icons -->
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.1.0/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <!-- CSS 파일 -->
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/board/board-common.css}">
+    <link rel="stylesheet" th:href="@{/css/board/wordly-talking.css}">
+    <style>
+        /* 게시글 상세 페이지 스타일 */
+        .post-detail {
+            margin-bottom: 30px;
+        }
+
+        .post-detail-header {
+            margin-bottom: 20px;
+        }
+
+        .post-detail-category {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .post-detail-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .post-detail-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #666;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .post-date {
+            margin-left: 15px;
+        }
+
+        .post-detail-content {
+            padding: 30px 0;
+            line-height: 1.8;
+            border-bottom: 1px solid #e5e5e5;
+            white-space: pre-line;
+        }
+
+        .post-detail-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            background-color: #f5f5f5;
+            color: #333;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .action-btn:hover {
+            background-color: #e0e0e0;
+        }
+
+        .like-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 20px;
+            background-color: #FFF2E8;
+            color: #FF902F;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .like-btn:hover {
+            background-color: #FFE5D1;
+        }
+
+        /* 댓글 영역 스타일 */
+        .comment-section {
+            margin-top: 50px;
+        }
+
+        .comment-header {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .comment-list {
+            margin-bottom: 30px;
+        }
+
+        .comment-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .comment-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .comment-author {
+            font-weight: bold;
+        }
+
+        .comment-date {
+            font-size: 14px;
+            color: #999;
+        }
+
+        .comment-content {
+            line-height: 1.6;
+        }
+
+        .comment-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .delete-comment {
+            font-size: 13px;
+            color: #999;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .delete-comment:hover {
+            color: #333;
+            text-decoration: underline;
+        }
+
+        .comment-form {
+            margin-top: 30px;
+        }
+
+        .comment-textarea {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #e5e5e5;
+            border-radius: 5px;
+            min-height: 100px;
+            resize: vertical;
+            font-family: 'KoPubWorldDotum', sans-serif;
+            margin-bottom: 15px;
+        }
+
+        .comment-submit {
+            padding: 10px 20px;
+            background-color: #D1DE74;
+            color: #333;
+            border: none;
+            border-radius: 5px;
+            font-family: 'KoPubWorldDotum', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .comment-submit:hover {
+            background-color: #c1ce64;
+        }
+
+        .no-comments {
+            padding: 20px 0;
+            color: #999;
+            text-align: center;
+        }
+
+        /* 반응형 스타일 */
+        @media (max-width: 768px) {
+            .post-detail-actions {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .post-detail-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Main Content -->
+<div class="main-content">
+    <!-- 헤더 -->
+    <header class="board-header">
+        <div class="logo">WORDLY</div>
+        <div class="user-actions">
+            <div class="search-box">
+                <input type="text" placeholder="키워드, # 태그 검색">
+                <button class="search-btn"><i class="fi fi-rr-search"></i></button>
+            </div>
+            <div class="auth-buttons">
+                <!-- 로그인 상태에 따라 변경 -->
+                <a th:if="${loginUserBean.login == true}" th:href="@{/user/modify}" class="login-btn" th:text="${loginUserBean.user_nickname} + ' 님'">홍길동 님</a>
+                <a th:unless="${loginUserBean.login == true}" th:href="@{/user/login}" class="login-btn">로그인</a>
+                <a href="/main" class="page-btn">학습 페이지로</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="board-divider"></div>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <div class="board-container">
+        <!-- 좌측 메뉴 -->
+        <div class="board-sidebar">
+            <h2 class="section-title">COMMUNITY</h2>
+
+            <div class="board-menu">
+                <div class="menu-category">
+                    <a th:href="@{/board/wordly-talking}" class="menu-item">워들리 토킹</a>
+                    <a th:href="@{/board/connect}" class="menu-item active">커넥트</a>
+                </div>
+
+                <div class="menu-subcategory">
+                    <a th:href="@{/board/connect/tutor}" class="submenu-item" th:classappend="${boardBean.board_info_type.contains('tutor')} ? 'active' : ''">비즈니스</a>
+                    <!-- 다른 서브메뉴는 비활성화
+                    <a th:href="@{/board/connect/student}" class="submenu-item" th:classappend="${boardBean.board_info_type.contains('student')} ? 'active' : ''">학생 구함</a>
+                    -->
+                </div>
+            </div>
+        </div>
+
+        <!-- 게시글 상세 영역 -->
+        <div class="board-content">
+            <div class="post-detail">
+                <div class="post-detail-header">
+                    <span class="post-detail-category">
+                        <i class="fi fi-rr-comment-alt"></i> 커넥트 · <span th:text="${boardBean.board_info_name}">비즈니스</span>
+                    </span>
+                    <h1 class="post-detail-title" th:text="${boardBean.board_title}">게시글 제목</h1>
+                    <div class="post-detail-info">
+                        <div class="author-info">
+                            <span class="author-name" th:text="${boardBean.user_nickname}">작성자</span>
+                            <span class="post-date" th:data-date="${boardBean.created_date}" th:text="${#strings.substring(boardBean.created_date, 0, 10)}">작성일</span>
+                        </div>
+                        <div class="view-count">
+                            <span class="comment-count">
+                                <i class="fi fi-rr-comment"></i> <span th:text="${boardBean.comment_count}">0</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-detail-content" th:utext="${boardBean.board_text}">
+                    게시글 내용
+                </div>
+
+                <div class="post-detail-actions">
+                    <div class="action-buttons">
+                        <a th:href="@{|/board/connect/${boardBean.board_info_type.substring(8)}|}" class="action-btn">목록</a>
+                        <!-- 작성자인 경우만 수정/삭제 표시 -->
+                        <th:block th:if="${loginUserBean.login == true && loginUserBean.user_key == boardBean.user_key}">
+                            <a th:href="@{|/board/connect/modify/${boardBean.board_key}|}" class="action-btn">수정</a>
+                            <a th:href="@{|/board/connect/delete/${boardBean.board_key}|}" class="action-btn" onclick="return confirm('정말 삭제하시겠습니까?')">삭제</a>
+                        </th:block>
+                    </div>
+
+                    <div class="like-btn" th:data-board-key="${boardBean.board_key}">
+                        <i th:class="${boardBean.user_like ? 'fi fi-sr-heart' : 'fi fi-rr-heart'}"></i>
+                        <span>좋아요</span>
+                        <span th:text="${boardBean.like_count}">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 댓글 영역 -->
+            <div class="comment-section">
+                <h3 class="comment-header">댓글 <span th:text="${boardBean.comment_count}">0</span></h3>
+
+                <div class="comment-list">
+                    <!-- 댓글이 없는 경우 -->
+                    <div th:if="${#lists.isEmpty(commentList)}" class="no-comments">
+                        작성된 댓글이 없습니다.
+                    </div>
+
+                    <!-- 댓글 목록 -->
+                    <div th:each="comment : ${commentList}"
+                         th:class="${comment.depth > 0 ? 'comment-item comment-reply' : 'comment-item'}"
+                         th:data-comment-key="${comment.comment_key}">
+                        <div class="comment-item-header">
+                            <span class="comment-author" th:text="${comment.user_nickname}">댓글 작성자</span>
+                            <span class="comment-date" th:data-date="${comment.created_date}" th:text="${#strings.substring(comment.created_date, 0, 10)}">작성일</span>
+                        </div>
+                        <div class="comment-content" th:text="${comment.comment_text}">
+                            댓글 내용
+                        </div>
+                        <div class="comment-actions">
+                            <!-- 대댓글 버튼은 원댓글에만 표시 -->
+                            <button th:if="${comment.depth == 0}" class="reply-comment-btn" th:attr="onclick='toggleReplyForm(' + ${comment.comment_key} + ')'">답글</button>
+                            <button class="delete-comment" th:if="${loginUserBean.login == true && loginUserBean.user_key == comment.comment_user_key}"
+                                    th:data-comment-key="${comment.comment_key}" th:data-board-key="${boardBean.board_key}">삭제</button>
+                        </div>
+
+                        <!-- 대댓글 작성 폼은 원댓글에만 표시 -->
+                        <div th:if="${comment.depth == 0}" class="reply-form-container">
+                            <form class="reply-form" th:data-parent-key="${comment.comment_key}" th:data-board-key="${boardBean.board_key}" style="display: none;">
+                                <textarea class="reply-textarea" placeholder="답글을 작성해주세요." required></textarea>
+                                <div style="text-align: right;">
+                                    <button type="button" class="cancel-reply-btn" th:attr="onclick='toggleReplyForm(' + ${comment.comment_key} + ')'">취소</button>
+                                    <button type="submit" class="reply-submit">답글 등록</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 댓글 작성 폼 -->
+                <form class="comment-form" th:data-board-key="${boardBean.board_key}">
+                    <textarea class="comment-textarea" placeholder="댓글을 작성해주세요." required></textarea>
+                    <div style="text-align: right;">
+                        <button type="submit" class="comment-submit">댓글 등록</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript 파일 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script th:src="@{/js/util.js}"></script>
+<script th:src="@{/js/board/wordly-talking.js}"></script>
+</body>
+</html>
