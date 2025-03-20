@@ -346,13 +346,21 @@
                     </div>
                 </div>
 
-                <!-- 댓글 작성 폼 -->
-                <form class="comment-form" th:data-board-key="${boardBean.board_key}">
-                    <textarea class="comment-textarea" placeholder="댓글을 작성해주세요." required></textarea>
-                    <div style="text-align: right;">
-                        <button type="submit" class="comment-submit">댓글 등록</button>
-                    </div>
-                </form>
+                <!-- 댓글 작성 폼 (비즈니스 게시판일 경우 권한 체크) -->
+                <div th:if="${boardBean.board_info_type != 'connect-tutor' || loginUserBean.login == true && (loginUserBean.user_key == boardBean.user_key || loginUserBean.user_type == 'tutor')}">
+                    <form class="comment-form" th:data-board-key="${boardBean.board_key}">
+                        <textarea class="comment-textarea" placeholder="댓글을 작성해주세요." required></textarea>
+                        <div style="text-align: right;">
+                            <button type="submit" class="comment-submit">댓글 등록</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 권한이 없는 경우 메시지 표시 -->
+                <div th:if="${boardBean.board_info_type == 'connect-tutor' && !(loginUserBean.login == true && (loginUserBean.user_key == boardBean.user_key || loginUserBean.user_type == 'tutor'))}"
+                     class="no-permission-message" style="margin-top: 30px; text-align: center; padding: 15px; background-color: #f8f8f8; border-radius: 5px;">
+                    <p>비즈니스 게시판의 댓글은 게시글 작성자와 튜터만 작성할 수 있습니다.</p>
+                </div>
             </div>
         </div>
     </div>

@@ -368,12 +368,11 @@ public class BoardController {
     }
 
     /**
-     * 댓글 작성 AJAX 처리
+     * 댓글 작성 AJAX 처리 - 수정
      */
     @PostMapping("/api/comment/write")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> writeComment(@RequestBody BoardCommentBean commentBean) {
-
         Map<String, Object> result = new HashMap<>();
 
         // 로그인 체크
@@ -387,6 +386,21 @@ public class BoardController {
         commentBean.setComment_user_key(loginUserBean.getUser_key());
 
         try {
+            // 게시글 정보 가져오기
+            BoardBean boardBean = boardService.getBoardDetail(commentBean.getComment_board_key(), loginUserBean.getUser_key());
+
+            // 비즈니스 게시판 댓글 권한 체크 (새로 추가)
+            if(boardBean != null && "connect-tutor".equals(boardBean.getBoard_info_type())) {
+                boolean isAuthor = boardBean.getUser_key() == loginUserBean.getUser_key();
+                boolean isTutor = "tutor".equals(loginUserBean.getUser_type());
+
+                if(!isAuthor && !isTutor) {
+                    result.put("success", false);
+                    result.put("message", "비즈니스 게시판의 댓글은 작성자와 튜터만 작성할 수 있습니다.");
+                    return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
+                }
+            }
+
             // 댓글 작성
             boardService.writeComment(commentBean);
 
@@ -395,10 +409,6 @@ public class BoardController {
 
             result.put("success", true);
             result.put("commentList", commentList);
-
-            System.out.println(result.get("commentList"));
-            System.out.println(result.get("success"));
-
             return new ResponseEntity<>(result, HttpStatus.OK);
         } catch (Exception e) {
             result.put("success", false);
@@ -476,7 +486,7 @@ public class BoardController {
     }
 
     /**
-     * 대댓글 작성 AJAX 처리
+     * 대댓글 작성 AJAX 처리 - 수정
      */
     @PostMapping("/api/comment/reply")
     @ResponseBody
@@ -494,6 +504,21 @@ public class BoardController {
         commentBean.setComment_user_key(loginUserBean.getUser_key());
 
         try {
+            // 게시글 정보 가져오기
+            BoardBean boardBean = boardService.getBoardDetail(commentBean.getComment_board_key(), loginUserBean.getUser_key());
+
+            // 비즈니스 게시판 댓글 권한 체크 (새로 추가)
+            if(boardBean != null && "connect-tutor".equals(boardBean.getBoard_info_type())) {
+                boolean isAuthor = boardBean.getUser_key() == loginUserBean.getUser_key();
+                boolean isTutor = "tutor".equals(loginUserBean.getUser_type());
+
+                if(!isAuthor && !isTutor) {
+                    result.put("success", false);
+                    result.put("message", "비즈니스 게시판의 댓글은 작성자와 튜터만 작성할 수 있습니다.");
+                    return new ResponseEntity<>(result, HttpStatus.FORBIDDEN);
+                }
+            }
+
             // 대댓글 작성
             boardService.writeReply(commentBean);
 
@@ -606,11 +631,6 @@ public class BoardController {
             return "redirect:/user/login";
         }
 
-        // 로깅 추가 - 디버깅용
-        System.out.println("Connect Write Pro - 게시판 키: " + boardBean.getBoard_info_key());
-        System.out.println("Connect Write Pro - 제목: " + boardBean.getBoard_title());
-        System.out.println("Connect Write Pro - 내용 길이: " + (boardBean.getBoard_text() != null ? boardBean.getBoard_text().length() : 0));
-
         // 사용자 키 설정
         boardBean.setUser_key(loginUserBean.getUser_key());
 
@@ -629,8 +649,6 @@ public class BoardController {
                 category = boardInfoBean.getBoard_info_type().replace("connect-", "");
             }
         }
-
-        System.out.println("Connect Write Pro - 리다이렉트 경로: /board/connect/" + category);
 
         return "redirect:/board/connect/" + category;
     }

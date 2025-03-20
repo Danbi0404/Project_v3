@@ -166,6 +166,7 @@ function performSearch(query, category) {
     window.location.href = `/board/${boardType}/search?q=${encodeURIComponent(query)}&category=${category}`;
 }
 
+// ===== 댓글 작성 폼 초기화 =====
 function initCommentForm() {
     const commentForm = document.querySelector('.comment-form');
     if (!commentForm) return;
@@ -205,10 +206,16 @@ function initCommentForm() {
                     window.location.href = '/user/login';
                     throw new Error('로그인 필요');
                 }
+                if(response.status === 403) {
+                    // 403 Forbidden 오류 처리 (새로 추가)
+                    return response.json().then(data => {
+                        alert(data.message || '권한이 없습니다.');
+                        throw new Error('권한 없음');
+                    });
+                }
                 return response.json();
             })
             .then(data => {
-                console.log(data);
                 if(data.success) {
                     // 댓글 목록 갱신
                     updateCommentList(data.commentList);
@@ -217,7 +224,7 @@ function initCommentForm() {
                     commentText.value = '';
                 } else {
                     console.error('댓글 작성 중 오류 발생:', data.message);
-                    alert('댓글 작성 중 오류가 발생했습니다.');
+                    alert(data.message || '댓글 작성 중 오류가 발생했습니다.');
                 }
             })
             .catch(error => {
@@ -286,6 +293,13 @@ function initReplyForms() {
                         window.location.href = '/user/login';
                         throw new Error('로그인 필요');
                     }
+                    if(response.status === 403) {
+                        // 403 Forbidden 오류 처리 (새로 추가)
+                        return response.json().then(data => {
+                            alert(data.message || '권한이 없습니다.');
+                            throw new Error('권한 없음');
+                        });
+                    }
                     return response.json();
                 })
                 .then(data => {
@@ -298,7 +312,7 @@ function initReplyForms() {
                         this.style.display = 'none';
                     } else {
                         console.error('대댓글 작성 중 오류 발생:', data.message);
-                        alert('대댓글 작성 중 오류가 발생했습니다.');
+                        alert(data.message || '대댓글 작성 중 오류가 발생했습니다.');
                     }
                 })
                 .catch(error => {
